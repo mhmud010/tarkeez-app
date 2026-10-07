@@ -1,0 +1,3723 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000" id="themeColorMeta">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" data-i18n-content="appTitle" content="تركيز">
+<meta name="format-detection" content="telephone=no">
+<title>تركيز — مؤقت وعادات</title>
+<meta name="description" content="تركيز: مؤقت بومودورو، عادات يومية، متابعة العبادات وإحصائيات متقدمة في تطبيق واحد.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:type" content="website">
+<meta property="og:title" content="تركيز — مؤقت وعادات">
+<meta property="og:description" content="مؤقت بومودورو وعادات وعبادات وإحصائيات تساعدك على التركيز.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='none' stroke='%237fa389' stroke-width='10'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%237fa389'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+*::-webkit-scrollbar {
+  display: none !important;
+}
+:root {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-2: #0a0a0a;
+  --surface-hover: #161616;
+  --line: #1e1e1e;
+  --text: #e7e4dd;
+  --text-dim: #93998f;
+  --text-faint: #5d6360;
+  --accent: #7fa389;
+  --accent-dim: #4c6353;
+  --accent-soft: rgba(127,163,137,0.14);
+  --danger: #b06a5c;
+  --danger-soft: rgba(176,106,92,0.14);
+  --success: #6ab07a;
+  --warning: #b0a35c;
+  --info: #5c8bb0;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --font: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.15);
+  --shadow-md: 0 12px 32px rgba(0,0,0,0.4);
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+html.light {
+  --bg: #f2f0ea;
+  --surface: #fbfaf7;
+  --surface-2: #eae7de;
+  --surface-hover: #e0ddd3;
+  --line: #ddd9cd;
+  --text: #23261f;
+  --text-dim: #63665b;
+  --text-faint: #9a9c8f;
+  --danger: #a1503f;
+  --danger-soft: rgba(161,80,63,0.14);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-md: 0 12px 32px rgba(0,0,0,0.08);
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition-normal), color var(--transition-normal);
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+button, .heatmap-cell, .chart-bar {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 80px;
+}
+.app-container {
+  width: 100%;
+  max-width: 640px;
+  position: relative;
+  z-index: 10;
+}
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid transparent;
+}
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+header h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  margin: 0;
+}
+.welcome-badge {
+  display: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 6px 16px;
+  border-radius: 99px;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.4s ease forwards;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.date-navigator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.date-navigator button {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  transition: all var(--transition-fast);
+}
+.date-navigator button:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+.date-navigator button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.date-navigator button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+.today-date {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  text-transform: capitalize;
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--transition-fast);
+}
+.today-date:hover {
+  color: var(--text);
+}
+.today-date.historical {
+  color: var(--warning);
+  font-weight: 600;
+}
+nav.tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+nav.tabs button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 12px 6px;
+  margin-inline-end: 24px;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+nav.tabs button:last-child {
+  margin-inline-end: 0;
+}
+nav.tabs button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+nav.tabs button:hover {
+  color: var(--text);
+}
+nav.tabs button.active {
+  color: var(--text);
+  font-weight: 600;
+}
+nav.tabs button.active::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -3px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 -2px 8px var(--accent-soft);
+}
+section.view {
+  display: none;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateY(8px);
+}
+section.view.active {
+  display: block;
+}
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 24px;
+  background: transparent;
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: none;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.timer-mode-selector {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 32px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border-bottom: 1px solid var(--line);
+}
+.timer-mode-selector button {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 0;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.timer-mode-selector button.active {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: none;
+  border-bottom: 2px solid var(--accent);
+}
+.ring-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin-bottom: 32px;
+}
+.ring-wrapper svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  filter: none;
+}
+.ring-track {
+  fill: none;
+  stroke: var(--surface-2);
+  stroke-width: 3;
+}
+.ring-progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke var(--transition-normal);
+}
+.ring-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.time-display {
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  color: var(--text);
+  line-height: 1;
+}
+.time-status {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.timer-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.btn {
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 14px 32px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn:hover {
+  border-color: var(--text-dim);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.btn.primary:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent-dim);
+}
+.btn.primary:disabled {
+  background: var(--surface-2);
+  border-color: var(--line);
+  color: var(--text-faint);
+  cursor: not-allowed;
+  transform: none;
+}
+.btn.icon-only {
+  padding: 14px;
+  border-radius: 50%;
+}
+.btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.section-heading {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin: 48px 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.heatmap-summary {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.heatmap-summary strong {
+  color: var(--text);
+  font-weight: 700;
+}
+.heatmap-body {
+  display: flex;
+  gap: 12px;
+}
+.heatmap-y-axis {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 24px;
+  flex: 0 0 auto;
+}
+.heatmap-y-axis span {
+  height: 14px;
+  line-height: 14px;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.heatmap-scroll-area {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.heatmap-x-axis {
+  position: relative;
+  height: 20px;
+  margin-bottom: 4px;
+  width: max-content;
+}
+.heatmap-x-axis span {
+  position: absolute;
+  top: 0;
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.heatmap-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 14px);
+  gap: 4px;
+  width: max-content;
+}
+.heatmap-cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+}
+.heatmap-cell:hover {
+  transform: scale(1.35);
+  z-index: 2;
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+}
+.heatmap-cell[data-intensity="1"] { background: color-mix(in srgb, var(--accent) 28%, var(--surface-2)); border-color: transparent; }
+.heatmap-cell[data-intensity="2"] { background: color-mix(in srgb, var(--accent) 55%, var(--surface-2)); border-color: transparent; }
+.heatmap-cell[data-intensity="3"] { background: color-mix(in srgb, var(--accent) 78%, var(--surface-2)); border-color: transparent; }
+.heatmap-cell[data-intensity="4"] { background: var(--accent); border-color: transparent; box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent); }
+.heatmap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+.heatmap-legend-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.heatmap-legend-wrap .heatmap-cell {
+  width: 12px;
+  height: 12px;
+  cursor: default;
+}
+.heatmap-legend-wrap .heatmap-cell:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(255,255,255,0.05);
+}
+.tooltip {
+  position: absolute;
+  background: var(--surface-hover);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 100;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line);
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+}
+.heatmap-cell:hover .tooltip {
+  opacity: 1;
+}
+.input-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: var(--surface);
+  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.input-group:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.input-group input[type="text"] {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  padding: 12px 16px;
+  outline: none;
+}
+.input-group input::placeholder {
+  color: var(--text-faint);
+}
+.checkbox-custom {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 2px solid var(--text-faint);
+  flex: 0 0 auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  background: transparent;
+}
+.checkbox-custom.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.checkbox-custom.checked::after {
+  content: "";
+  width: 6px;
+  height: 12px;
+  border-right: 2.5px solid var(--bg);
+  border-bottom: 2.5px solid var(--bg);
+  transform: rotate(45deg) translate(-1px, -2px);
+}
+.habit-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.habit-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--line);
+  transition: background var(--transition-fast);
+}
+html[dir="rtl"] .habit-card::before {
+  left: auto;
+  right: 0;
+}
+.habit-card:hover {
+  border-color: var(--text-faint);
+  transform: translateX(4px);
+}
+html[dir="rtl"] .habit-card:hover {
+  transform: translateX(-4px);
+}
+.habit-card.done::before {
+  background: var(--accent);
+}
+.habit-card .habit-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  color: var(--text-dim);
+}
+.habit-card .habit-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.habit-card.done .habit-icon {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.habit-details {
+  flex: 1;
+}
+.habit-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  transition: color var(--transition-fast);
+}
+.habit-streak {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.habit-streak svg {
+  width: 12px;
+  height: 12px;
+  fill: var(--warning);
+}
+.habit-card.done .habit-title {
+  color: var(--text-dim);
+}
+.progress-container {
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+.progress-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.progress-stats {
+  font-size: 1.2rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+.progress-bar-bg {
+  width: 100%;
+  height: 12px;
+  background: var(--surface-2);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  width: 0%;
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.progress-bar-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.worship-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 32px 0 16px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.worship-section-title span.count {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  font-weight: 500;
+  margin-inline-start: auto;
+}
+.prayers-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.prayer-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.prayer-card:hover {
+  border-color: var(--text-faint);
+  transform: translateY(-2px);
+}
+.prayer-card.done {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.prayer-card .p-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--text-dim);
+  transition: color var(--transition-fast);
+}
+.prayer-card.done .p-icon {
+  color: var(--accent);
+}
+.prayer-card .p-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.prayer-card .p-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: color var(--transition-fast);
+}
+.prayer-card.done .p-name {
+  color: var(--accent);
+}
+
+.worship-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.w-list-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+.w-list-item:hover {
+  border-color: var(--text-faint);
+}
+.w-list-item.done {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.w-list-item .w-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--text-dim);
+  flex: 0 0 auto;
+}
+.w-list-item.done .w-icon {
+  color: var(--accent);
+}
+.w-list-item .w-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.w-list-item .w-details {
+  flex: 1;
+}
+.w-list-item .w-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.w-list-item .w-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+.w-list-item.done .w-title, .w-list-item.done .w-subtitle {
+  color: var(--accent);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.3;
+}
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+.chart-container {
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.stats-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.stats-period-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.svg-chart {
+  width: 100%;
+  height: 200px;
+  overflow: visible;
+}
+.chart-bar {
+  fill: var(--accent);
+  transition: height 0.5s ease, y 0.5s ease, fill var(--transition-fast);
+  cursor: pointer;
+  rx: 4;
+}
+.chart-bar:hover {
+  fill: var(--accent-dim);
+}
+.chart-text {
+  fill: var(--text-faint);
+  font-size: 11px;
+  font-family: var(--font);
+  text-anchor: middle;
+}
+.settings-group {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.settings-group-title {
+  padding: 16px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.settings-item {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+.settings-item:last-child {
+  border-bottom: none;
+}
+.settings-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.settings-item-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.settings-item-desc {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+.settings-control-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.input-number {
+  width: 80px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+.input-number:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.color-swatches {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.swatch-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+}
+.swatch-btn:hover {
+  transform: scale(1.1);
+}
+.swatch-btn.active {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text);
+  transform: scale(1.05);
+}
+.segment-control {
+  display: inline-flex;
+  background: var(--surface-2);
+  border-radius: 99px;
+  padding: 4px;
+}
+.segment-control button {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.segment-control button.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.switch-control {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+.switch-control input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--surface-2);
+  transition: .3s;
+  border-radius: 34px;
+  border: 1px solid var(--line);
+}
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-dim);
+  transition: .3s;
+  border-radius: 50%;
+}
+html[dir="rtl"] .switch-slider:before {
+  left: auto;
+  right: 3px;
+}
+input:checked + .switch-slider {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+input:checked + .switch-slider:before {
+  transform: translateX(22px);
+  background-color: var(--bg);
+}
+html[dir="rtl"] input:checked + .switch-slider:before {
+  transform: translateX(-22px);
+}
+.habit-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+.habit-edit-input {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 0.95rem;
+}
+.habit-edit-input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.btn-delete-habit {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: none;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toast-container {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10001;
+  pointer-events: none;
+}
+.toast {
+  background: var(--text);
+  color: var(--bg);
+  padding: 16px 24px;
+  border-radius: 99px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  pointer-events: auto;
+  border: 1px solid var(--line);
+}
+.toast.toast-hiding {
+  animation: toastOut 0.3s forwards;
+}
+
+.auth-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 10000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.auth-box {
+  background: var(--surface);
+  padding: 48px 40px;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.auth-title {
+  text-align: center;
+  color: var(--text);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-top: -16px;
+  line-height: 1.5;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.auth-input {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+.auth-input:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.auth-switch {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  font-weight: 500;
+}
+.auth-switch:hover {
+  color: var(--accent);
+}
+.auth-error {
+  display: none;
+  background: var(--danger-soft);
+  color: var(--danger);
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid var(--danger);
+}
+.spinner {
+  border: 3px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  border-top: 3px solid #fff;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: none;
+}
+.global-loader {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 10005;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.global-loader .spinner {
+  display: block;
+  border-top-color: var(--accent);
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastIn { from { opacity: 0; transform: translateY(100%) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(20px) scale(0.9); } }
+
+
+.goal-card{margin:20px 0 8px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-2)}
+.goal-row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--text-dim);margin-bottom:10px}
+.goal-bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.goal-fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .4s ease}
+.goal-card.reached .goal-fill{background:var(--success)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* heatmap simple */
+.heatmap-y-axis,.heatmap-x-axis{display:none}
+.heatmap-body{display:block}
+.heatmap-scroll-area{overflow:visible}
+.heatmap-grid{display:grid;grid-template-columns:repeat(17,1fr);grid-auto-flow:row;grid-template-rows:none;gap:5px;width:100%}
+.heatmap-grid .heatmap-cell{width:auto;height:auto;aspect-ratio:1;border-radius:5px;cursor:pointer}
+.heatmap-grid .heatmap-cell:hover{transform:none;box-shadow:none;border-color:var(--accent)}
+.heatmap-grid .heatmap-cell.today{outline:2px solid var(--text-dim);outline-offset:1px}
+.heatmap-legend-wrap .heatmap-cell{aspect-ratio:auto}
+.heatmap-detail{min-height:1.2em;margin-top:12px;font-size:.82rem;color:var(--text-dim);text-align:center}
+/* next prayer */
+.next-prayer{border:1px solid var(--line);background:var(--surface-2);border-radius:var(--radius-md);padding:18px;margin-bottom:20px}
+.np-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.np-label{font-size:.8rem;color:var(--text-faint);margin-bottom:4px}
+.np-name{font-size:1.6rem;font-weight:700;color:var(--accent)}
+.np-right{text-align:end}
+.np-time{font-size:1.1rem;font-weight:600}
+.np-count{font-size:.95rem;color:var(--text-dim);font-variant-numeric:tabular-nums;direction:ltr}
+.np-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:16px 0 12px}
+.np-t{text-align:center;padding:8px 2px;border-radius:var(--radius-sm);font-size:.75rem;color:var(--text-dim);border:1px solid transparent}
+.np-t b{display:block;font-size:.85rem;color:var(--text);margin-top:2px;font-weight:600}
+.np-t.on{border-color:var(--accent);background:var(--accent-soft)}
+.np-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.np-loc,.np-sel{background:none;border:1px solid var(--line);color:var(--text-dim);font-family:var(--font);font-size:.78rem;padding:6px 10px;border-radius:99px;cursor:pointer;max-width:100%}
+.np-sel{background:var(--bg)}
+.prayer-card.locked,.w-list-item.locked{opacity:.4;cursor:not-allowed}
+.prayer-card.next{border-color:var(--accent)}
+.p-time{font-size:.72rem;color:var(--text-faint);margin-top:2px}
+/* insights */
+.ins-hero{display:flex;align-items:center;gap:20px;padding:18px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-2);margin-bottom:12px}
+.score{--p:0;flex:0 0 auto;width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center}
+.score b{width:78px;height:78px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-size:1.7rem}
+.ins-parts{flex:1;display:grid;gap:8px;font-size:.82rem;color:var(--text-dim)}
+.ins-card{border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-2);padding:16px;margin-bottom:12px}
+.ins-card h4{font-size:.9rem;font-weight:600;margin-bottom:12px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:96px}
+.bar-col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;min-width:0}
+.bar-col .bar{width:100%;background:color-mix(in srgb,var(--accent) 45%,var(--surface-2));border-radius:4px 4px 0 0}
+.bar-col.hl .bar{background:var(--accent)}
+.bar-col span{font-size:.62rem;color:var(--text-faint);height:12px;white-space:nowrap}
+.rate{display:flex;align-items:center;gap:10px;font-size:.82rem;margin-bottom:8px}
+.rate span{flex:0 0 38%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-dim)}
+.rate-bar{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.rate-bar i{display:block;height:100%;background:var(--accent)}
+.rate b{flex:0 0 40px;text-align:end;font-weight:600}
+.ins-tips{list-style:none;display:grid;gap:8px;font-size:.88rem;line-height:1.7}
+.ins-tips li{display:flex;gap:10px;align-items:flex-start}
+.ins-tips li .ic{width:18px;height:18px;margin:3px 0 0;color:var(--accent)}
+.trend-up{color:var(--success)}.trend-down{color:var(--danger)}
+
+html[dir="rtl"] .date-navigator button svg{transform:scaleX(-1)}
+.dev-desc{font-size:.82rem;color:var(--text-dim);margin-top:4px;direction:ltr;unicode-bidi:isolate;text-align:start}
+html[dir="rtl"] .dev-desc{text-align:right}
+.dev-wa{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--accent);border-color:var(--accent);padding:8px 16px;font-size:.85rem}
+.dev-wa svg{width:18px;height:18px;fill:currentColor}
+.auth-lang{margin-top:18px;text-align:center}
+
+/* ===== app feel (all sizes) ===== */
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,select{-webkit-user-select:text;user-select:text}
+img,svg,a{-webkit-user-drag:none}
+html{overscroll-behavior-y:none}
+button:active:not(:disabled),.habit-card:active,.w-list-item:active,.prayer-card:active{transform:scale(.98)}
+@media (hover:none){.habit-card:hover,.prayer-card:hover{transform:none}}
+.nav-ico{display:none}
+nav.tabs .nav-label{pointer-events:none}
+@media (min-width:701px){.app-container{max-width:720px}}
+
+/* ===== mobile / app mode ===== */
+@media (max-width:700px){
+  :root{padding-top:0;padding-bottom:0}
+  html,body{height:auto;min-height:100%;overflow-x:clip}
+  body{display:block;padding:0 16px;min-height:100dvh}
+  .app-container{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  header{position:sticky;top:0;z-index:40;flex-wrap:nowrap;gap:10px;margin:0 -16px 8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 10px;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+  .header-title-group{flex-direction:column;align-items:flex-start;gap:0;min-width:0}
+  header h1{font-size:1.25rem;line-height:1.3}
+  .welcome-badge{background:none;border:none;padding:0;font-size:.75rem;font-weight:500;color:var(--text-dim);gap:0;white-space:nowrap}
+  .welcome-badge svg{display:none}
+  .date-navigator{gap:6px;flex:0 0 auto;min-width:0}
+  .date-navigator button{width:36px;height:36px;border-radius:10px;flex:0 0 auto}
+  .today-date{font-size:.8rem;white-space:nowrap;max-width:36vw;overflow:hidden;text-overflow:ellipsis}
+
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:500;display:flex;justify-content:space-around;gap:0;margin:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));overflow:visible;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--line);border-bottom:none}
+  nav.tabs button{flex:1 1 0;min-width:0;margin:0;padding:4px 0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.68rem;font-weight:600;color:var(--text-faint)}
+  nav.tabs button.active{color:var(--accent)}
+  nav.tabs button.active::after{content:none}
+  .nav-ico{display:grid;place-items:center;width:52px;height:30px;border-radius:99px;transition:background var(--transition-fast)}
+  nav.tabs button.active .nav-ico{background:var(--accent-soft)}
+  nav.tabs button svg{display:block;width:22px;height:22px;fill:currentColor}
+  .nav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+  section.view{padding-top:4px}
+  .timer-container{padding:8px 0 0;margin-bottom:8px}
+  .timer-mode-selector{gap:20px;margin-bottom:20px}
+  .ring-wrapper{width:min(72vw,280px);height:min(72vw,280px);margin-bottom:24px}
+  .time-display{font-size:clamp(2.6rem,13vw,3.4rem)}
+  .timer-actions{gap:12px;width:100%;justify-content:center}
+  .btn{padding:12px 24px}
+  .section-heading{margin:28px 0 12px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+  .stat-card{padding:14px;gap:4px}
+  .stat-value{font-size:1.3rem;overflow-wrap:anywhere}
+  .stat-label{font-size:.75rem}
+  .ins-hero{padding:14px;gap:14px}
+  .score{width:84px;height:84px}.score b{width:68px;height:68px;font-size:1.5rem}
+  .svg-chart{height:170px}
+  .prayers-grid{grid-template-columns:repeat(5,1fr);gap:6px}
+  .prayer-card{padding:12px 2px;gap:6px}
+  .prayer-card .p-icon{width:24px;height:24px}
+  .prayer-card .p-name{font-size:.78rem}
+  .p-time{font-size:.66rem}
+  .habit-card{padding:14px 16px;gap:12px;margin-bottom:10px}
+  .w-list-item{padding:14px 16px;gap:12px}
+  .settings-item{padding:14px 16px;flex-direction:row;flex-wrap:wrap;gap:12px;align-items:center}
+  .settings-item-info{flex:1 1 140px;min-width:0}
+  .settings-control-row{width:auto}
+  .segment-control button{padding:8px 14px}
+  .next-prayer{padding:14px}
+  .np-name{font-size:1.35rem}
+  .np-row{gap:4px}
+  .np-t{font-size:.68rem;padding:6px 0}.np-t b{font-size:.74rem}
+  input,textarea,.np-sel{font-size:16px}
+  .toast-container{bottom:calc(92px + env(safe-area-inset-bottom,0px));width:calc(100% - 32px)}
+  .auth-overlay{overflow-y:auto;padding:0}
+  .auth-box{min-height:100dvh;height:auto;padding:calc(32px + env(safe-area-inset-top,0px)) 24px calc(32px + env(safe-area-inset-bottom,0px));border:none;border-radius:0;box-shadow:none;animation:none;justify-content:center}
+}
+@media (max-width:360px){
+  header{flex-wrap:wrap}
+  .timer-mode-selector{gap:14px}.timer-mode-selector button{font-size:.78rem}
+  .stat-value{font-size:1.15rem}
+  .nav-ico{width:44px}
+}
+@media (max-width:900px) and (max-height:500px) and (orientation:landscape){
+  .ring-wrapper{width:150px;height:150px;margin-bottom:12px}
+  .time-display{font-size:2rem}
+  .nav-label{display:none}
+  nav.tabs{padding-top:2px}
+  .app-container{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+}
+
+.heatmap-grid{grid-template-columns:repeat(12,1fr);gap:6px}
+.heat-modes{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.heat-modes button,.perf-share,.amb-btn{font-family:var(--font);font-size:.78rem;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--text-dim);cursor:pointer}
+.heat-modes button.active,.amb-btn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.amb-row{display:flex;justify-content:center;margin:4px 0 4px}
+.perf-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.perf-head h4{margin:0}
+.perf-main{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.perf-side{flex:1;min-width:0;display:grid;gap:6px}
+.perf-title{font-weight:700;font-size:1rem}
+.perf-delta{font-size:.82rem;color:var(--text-dim)}
+.perf-meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.perf-meter i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.perf-small{font-size:.75rem;color:var(--text-faint)}
+.perf-kpis{margin:12px 0}
+.perf-kpis .stat-value{font-size:1.1rem}
+.perf-kpis .stat-value small{font-size:.75em}
+.perf-note{font-size:.88rem;line-height:1.8;margin-top:12px;padding:12px;border-radius:var(--radius-sm);background:var(--accent-soft)}
+.perf-share{margin-top:12px}
+.bar-col.tdy span{color:var(--accent);font-weight:700}
+.lvl-top{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.lvl-badge{flex:0 0 auto;width:52px;height:52px;border-radius:16px;background:var(--accent);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:1.1rem}
+.lvl-info{flex:1;min-width:0}
+.lvl-name{font-weight:700;font-size:1.05rem}
+.lvl-sub{font-size:.78rem;color:var(--text-dim);margin-top:2px}
+.streak-box{text-align:center;font-size:1.3rem;font-weight:800;line-height:1.1}
+.streak-box small{display:block;font-size:.65rem;font-weight:500;color:var(--text-faint)}
+@media (max-width:700px){.perf-main{gap:12px}}
+.ic{width:1.1em;height:1.1em;fill:currentColor;vertical-align:-.2em;flex:0 0 auto;margin-inline-end:.35em}
+.perf-note .ic{color:var(--accent)}
+.streak-box .ic{display:block;width:26px;height:26px;margin:0 auto 2px;color:var(--accent)}
+.trend-up .ic,.trend-down .ic,.perf-delta .ic{width:.95em;height:.95em;margin-inline-end:2px;vertical-align:-.12em}
+.amb-btn,.perf-share,.np-loc{display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.amb-btn .ic,.perf-share .ic,.np-loc .ic{margin:0}
+.perf-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.perf-nav-mid{flex:1;min-width:0;text-align:center}
+.perf-nav-mid .perf-title{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.pn{flex:0 0 auto;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--text);display:grid;place-items:center;cursor:pointer}
+.pn:disabled{opacity:.3;cursor:default}
+.pn .ic{margin:0;width:20px;height:20px}
+html[dir="rtl"] .pn .ic{transform:scaleX(-1)}
+.perf-tag{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:2px 8px;background:var(--accent-soft)}
+.perf-tag .ic{margin:0;width:12px;height:12px}
+.perf-cur{display:block;margin:-4px auto 12px;font-family:var(--font);font-size:.78rem;font-weight:600;padding:5px 14px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--accent);cursor:pointer}
+.rec{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:transparent;color:var(--text);font-family:var(--font);text-align:start;margin-bottom:8px}
+button.rec{cursor:pointer}
+.rec>.ic{width:22px;height:22px;margin:0;color:var(--accent)}
+.rec-info{flex:1;min-width:0;display:grid;gap:2px}
+.rec-info b{font-size:.9rem}
+.rec-info small{font-size:.75rem;color:var(--text-dim)}
+.rec-val{font-weight:800;font-size:1rem;color:var(--accent);white-space:nowrap}
+#insights .ins-card:first-child{scroll-margin-top:96px}
+.net-banner{position:fixed;top:0;left:0;right:0;z-index:900;padding:calc(env(safe-area-inset-top,0px) + 6px) 12px 6px;text-align:center;font-size:.78rem;font-weight:600;background:var(--surface-2);color:var(--text-dim);border-bottom:1px solid var(--line)}
+.net-banner[hidden],.settings-group[hidden]{display:none}
+[hidden]{display:none!important}
+@media (min-width:701px){
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .heatmap-grid{max-width:620px;margin-inline:auto}
+  .ring-wrapper{margin-inline:auto}
+}
+@media (min-width:1280px){.app-container{max-width:780px}}
+@media (max-height:500px) and (orientation:landscape){
+  header{position:static;padding-top:calc(env(safe-area-inset-top,0px) + 8px)}
+  .timer-container{padding-top:0}
+  .timer-mode-selector{margin-bottom:10px}
+  .ring-wrapper{width:130px;height:130px;margin-bottom:10px}
+}
+.stats-filter-card{margin:0 0 14px}
+.stats-filter-card .stats-filter-header{margin:0}
+</style>
+</head>
+<body>
+<noscript><p style="padding:24px;text-align:center">يلزم تفعيل JavaScript لتشغيل التطبيق.<br>JavaScript is required to run this app.</p></noscript>
+<div class="net-banner" id="netBanner" role="status" hidden data-i18n="offlineMsg"></div>
+
+<div id="globalLoader" class="global-loader">
+  <div class="spinner"></div>
+  <div data-i18n="loaderText" style="color: var(--text-dim); font-weight: 500; font-size: 1.1rem; margin-top: 8px;">جاري إعداد مساحتك الخاصة...</div>
+</div>
+
+<div id="authOverlay" class="auth-overlay" style="display: none;">
+  <div class="auth-box">
+    <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+      <svg viewBox="0 0 24 24" width="56" height="56" fill="var(--accent)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <h2 id="authTitle" class="auth-title">مرحباً بك في تركيز</h2>
+    <p id="authSubtitle" class="auth-subtitle" data-i18n="authSubtitle">سجل دخولك لحفظ بياناتك ومزامنتها بأمان عبر جميع أجهزتك</p>
+    
+    <div id="authError" class="auth-error"></div>
+
+    <form id="loginForm" class="auth-form">
+      <input type="email" id="loginEmail" autocomplete="email" class="auth-input" data-i18n-placeholder="authEmail" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="loginPassword" autocomplete="current-password" class="auth-input" data-i18n-placeholder="authPassword" placeholder="كلمة المرور" required>
+      <button type="submit" id="btnLoginSubmit" class="btn primary" style="justify-content: center; padding: 16px; font-size: 1.05rem;">
+        <span class="btn-text" data-i18n="authLoginBtn">تسجيل الدخول</span>
+        <div class="spinner"></div>
+      </button>
+      <p class="auth-switch" id="forgotPass" data-i18n="authForgot">نسيت كلمة المرور؟</p>
+      <p class="auth-switch" id="showSignup" data-i18n="authToSignup">مستخدم جديد؟ اضغط هنا لإنشاء حساب</p>
+    </form>
+
+    <form id="signupForm" class="auth-form" style="display: none;">
+      <input type="text" id="signupName" autocomplete="name" class="auth-input" data-i18n-placeholder="authName" placeholder="الاسم الكامل" required>
+      <input type="number" id="signupAge" class="auth-input" data-i18n-placeholder="authAge" placeholder="العمر" required min="5" max="120">
+      <input type="email" id="signupEmail" autocomplete="email" class="auth-input" data-i18n-placeholder="authEmail" placeholder="البريد الإلكتروني" required>
+      <input type="password" id="signupPassword" autocomplete="new-password" class="auth-input" data-i18n-placeholder="authPasswordNew" placeholder="كلمة المرور (6 أحرف على الأقل)" required minlength="6">
+      <button type="submit" id="btnSignupSubmit" class="btn primary" style="justify-content: center; padding: 16px; font-size: 1.05rem;">
+        <span class="btn-text" data-i18n="authSignupBtn">إنشاء الحساب</span>
+        <div class="spinner"></div>
+      </button>
+      <p class="auth-switch" id="showLogin" data-i18n="authToLogin">لديك حساب بالفعل؟ قم بتسجيل الدخول</p>
+    </form>
+    <p class="auth-switch auth-lang" id="authLang"></p>
+  </div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="app-container">
+
+  <header>
+    <div class="header-title-group">
+      <h1 data-i18n="appTitle">تركيز</h1>
+      <div id="welcomeName" class="welcome-badge"></div>
+    </div>
+    <div class="date-navigator">
+      <button id="btnPrevDate" data-i18n-aria="prevDay" aria-label="Previous Day"><svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg></button>
+      <div class="today-date" id="dateDisplay" data-i18n-title="goToday" title="العودة لليوم"></div>
+      <button id="btnNextDate" data-i18n-aria="nextDay" aria-label="Next Day"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="mainTabs">
+    <button class="active" data-view="focus" role="tab" aria-selected="true"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61 1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.96 8.96 0 0 0 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg></span><span class="nav-label" data-i18n="tabFocus"></span></button>
+    <button data-view="worship" role="tab" aria-selected="false"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z"/></svg></span><span class="nav-label" data-i18n="tabWorship"></span></button>
+    <button data-view="lifestyle" role="tab" aria-selected="false"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span><span class="nav-label" data-i18n="tabLifestyle"></span></button>
+    <button data-view="stats" role="tab" aria-selected="false"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg></span><span class="nav-label" data-i18n="tabStats"></span></button>
+    <button data-view="settings" role="tab" aria-selected="false"><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></span><span class="nav-label" data-i18n="tabSettings"></span></button>
+  </nav>
+
+  <section class="view active" id="view-focus">
+    <div class="timer-container">
+      <div class="timer-mode-selector" id="timerModes">
+        <button class="active" data-mode="pomodoro" data-i18n="modePomodoro"></button>
+        <button data-mode="shortBreak" data-i18n="modeShortBreak"></button>
+        <button data-mode="longBreak" data-i18n="modeLongBreak"></button>
+      </div>
+      
+      <div class="ring-wrapper">
+        <svg viewBox="0 0 280 280">
+          <circle class="ring-track" cx="140" cy="140" r="130"></circle>
+          <circle class="ring-progress" id="timerRing" cx="140" cy="140" r="130" stroke-dasharray="816.8" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="ring-content">
+          <div class="time-display" id="timeDisplay">25:00</div>
+          <div class="time-status" id="timeStatus" data-i18n="statusReady"></div>
+        </div>
+      </div>
+      
+      <div class="timer-actions">
+        <button class="btn primary" id="btnToggleTimer">
+          <svg viewBox="0 0 24 24" id="iconPlay"><path d="M8 5v14l11-7z"/></svg>
+          <svg viewBox="0 0 24 24" id="iconPause" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          <span id="btnToggleText" data-i18n="btnStart"></span>
+        </button>
+        <button class="btn icon-only" id="btnResetTimer" data-i18n-aria="resetLabel" data-i18n-title="resetLabel" aria-label="Reset" title="Reset">
+          <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        </button>
+        <button class="btn icon-only" id="btnSkipTimer" data-i18n-aria="skipLabel" data-i18n-title="skipLabel" aria-label="Skip" title="Skip">
+          <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="amb-row"><button class="amb-btn" id="btnAmbient" type="button"></button></div>
+    <div class="goal-card" id="goalCard">
+      <div class="goal-row"><span data-i18n="goalToday"></span><span id="goalText"></span></div>
+      <div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div>
+    </div>
+
+    <div class="section-heading" data-i18n="heatmapTitle"></div>
+    <div class="heatmap-container">
+      <div class="heat-modes" id="heatModes"></div>
+      <div class="heatmap-summary" id="heatmapSummary"></div>
+      <div class="heatmap-grid" id="heatmapGrid" role="img" data-i18n-aria="heatmapTitle" aria-label="heatmap"></div>
+      <div class="heatmap-detail" id="heatmapDetail"></div>
+    </div>
+    <div class="heatmap-footer">
+      <span data-i18n="heatmapLess"></span>
+      <div class="heatmap-legend-wrap">
+        <div class="heatmap-cell" data-intensity="0"></div>
+        <div class="heatmap-cell" data-intensity="1"></div>
+        <div class="heatmap-cell" data-intensity="2"></div>
+        <div class="heatmap-cell" data-intensity="3"></div>
+        <div class="heatmap-cell" data-intensity="4"></div>
+      </div>
+      <span data-i18n="heatmapMore"></span>
+    </div>
+  </section>
+
+  <section class="view" id="view-worship">
+    <div class="next-prayer" id="nextPrayerCard">
+      <div class="np-top">
+        <div><div class="np-label" data-i18n="prayerNext"></div><div class="np-name" id="npName">—</div></div>
+        <div class="np-right"><div class="np-time" id="npTime"></div><div class="np-count" id="npCount">--:--:--</div></div>
+      </div>
+      <div class="np-row" id="npRow"></div>
+      <div class="np-foot">
+        <button class="np-loc" id="btnLocate" type="button"><span id="npLoc"></span></button>
+        <select id="selMethod" class="np-sel" data-i18n-aria="prayerMethod" aria-label="method"></select>
+      </div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-header">
+        <div class="progress-title" data-i18n="worshipProgressTitle"></div>
+        <div class="progress-stats" id="worshipProgressStats">0%</div>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="worshipProgressBar"></div>
+      </div>
+    </div>
+
+    <div class="worship-section-title">
+      <span data-i18n="wsPrayers"></span>
+      <span class="count" id="countPrayers">0/5</span>
+    </div>
+    <div class="prayers-grid" id="prayersGrid"></div>
+
+    <div class="worship-section-title">
+      <span data-i18n="wsAdhkar"></span>
+      <span class="count" id="countAdhkar">0/3</span>
+    </div>
+    <div class="worship-list" id="adhkarList"></div>
+
+    <div class="worship-section-title">
+      <span data-i18n="wsQuran"></span>
+      <span class="count" id="countQuran">0/1</span>
+    </div>
+    <div class="worship-list" id="quranList"></div>
+
+    <div class="worship-section-title">
+      <span data-i18n="wsDaily"></span>
+      <span class="count" id="countDaily">0/1</span>
+    </div>
+    <div class="worship-list" id="dailyList"></div>
+
+    <div class="worship-section-title">
+      <span data-i18n="wsSunnah"></span>
+      <span class="count" id="countSunnah">0/5</span>
+    </div>
+    <div class="worship-list" id="sunnahList"></div>
+
+    <div class="worship-section-title">
+      <span data-i18n="wsNight"></span>
+      <span class="count" id="countNight">0/2</span>
+    </div>
+    <div class="worship-list" id="nightList"></div>
+
+  </section>
+
+  <section class="view" id="view-lifestyle">
+    <div class="progress-container">
+      <div class="progress-header">
+        <div class="progress-title" data-i18n="lifestyleProgressTitle"></div>
+        <div class="progress-stats" id="habitProgressStats">0/0</div>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="habitProgressBar"></div>
+      </div>
+    </div>
+    <div id="habitsList"></div>
+  </section>
+
+  <section class="view" id="view-stats">
+    <div class="chart-container" hidden>
+      <svg class="svg-chart" id="focusChart" viewBox="0 0 500 200" preserveAspectRatio="none"></svg>
+    </div>
+    
+    <div id="insights"></div>
+    <div class="section-heading" data-i18n="statsFocusHeading" hidden></div>
+    <div class="stats-grid" hidden>
+      <div class="stat-card">
+        <div class="stat-value" id="statTotalFocus">0</div>
+        <div class="stat-label" data-i18n="statTotalFocus"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statSessions">0</div>
+        <div class="stat-label" data-i18n="statSessions"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statStreak">0</div>
+        <div class="stat-label" data-i18n="statStreak"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statAvgPerDay">0</div>
+        <div class="stat-label" data-i18n="statAvgPerDay"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statBestDay">0</div>
+        <div class="stat-label" data-i18n="statBestDay"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statActiveDays">0</div>
+        <div class="stat-label" data-i18n="statActiveDays"></div>
+      </div>
+    </div>
+
+    <div class="section-heading" data-i18n="statsWorshipHeading"></div>
+    <div class="stats-filter-card">
+      <div class="stats-filter-header">
+        <div class="stats-period-label" id="statsPeriodLabel"></div>
+        <div class="segment-control" id="statsFilterSeg">
+          <button data-filter="week" class="active" data-i18n="filterWeek"></button>
+          <button data-filter="month" data-i18n="filterMonth"></button>
+          <button data-filter="year" data-i18n="filterYear"></button>
+        </div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statWorshipAvg">0%</div>
+        <div class="stat-label" data-i18n="statWorshipAvg"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statBestWorship">0%</div>
+        <div class="stat-label" data-i18n="statBestWorship"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statPrayersTotal">0</div>
+        <div class="stat-label" data-i18n="statPrayersTotal"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statPrayerRate">0%</div>
+        <div class="stat-label" data-i18n="statPrayerRate"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statQuranDays">0</div>
+        <div class="stat-label" data-i18n="statQuranDays"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statSunnahTotal">0</div>
+        <div class="stat-label" data-i18n="statSunnahTotal"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statNightTotal">0</div>
+        <div class="stat-label" data-i18n="statNightTotal"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statAdhkarTotal">0</div>
+        <div class="stat-label" data-i18n="statAdhkarTotal"></div>
+      </div>
+    </div>
+
+    <div class="section-heading" data-i18n="statsWorshipHistoryHeading"></div>
+    <div class="chart-container">
+      <svg class="svg-chart" id="worshipChart" viewBox="0 0 500 200" preserveAspectRatio="none"></svg>
+    </div>
+  </section>
+
+  <section class="view" id="view-settings">
+    <div class="settings-group" id="accountGroup" style="display: none;">
+      <div class="settings-group-title" data-i18n="settingsAccount">الحساب</div>
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" id="currentUserEmail"></div>
+        </div>
+        <button class="btn" id="btnSignOut" style="color:var(--danger); border-color:var(--danger); padding: 8px 16px; font-size: 0.85rem;" data-i18n="btnLogout">تسجيل الخروج</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title">
+        <span data-i18n="settingsHabits"></span>
+        <button class="btn" id="btnToggleHabitEdit" style="padding: 4px 12px; font-size: 0.8rem;" data-i18n="btnEdit"></button>
+      </div>
+      <div id="habitEditWrapper" style="display: none;">
+        <div class="settings-item" style="flex-direction: column; align-items: stretch; gap: 0;" id="habitsEditList"></div>
+        <div class="settings-item">
+          <div class="input-group" style="margin:0; width: 100%;">
+            <input type="text" id="inpNewHabit" data-i18n-placeholder="newHabitPlaceholder">
+            <button class="btn primary" id="btnAddCustomHabit" style="padding: 8px 16px;" data-i18n="btnAdd"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title" data-i18n="settingsTimer"></div>
+      
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingPomodoro"></div>
+          <div class="settings-item-desc" data-i18n="settingPomodoroDesc"></div>
+        </div>
+        <div class="settings-control-row">
+          <input type="number" class="input-number" id="inpPomodoro" min="1" max="120">
+          <span class="text-dim" data-i18n="unitMin"></span>
+        </div>
+      </div>
+      
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingDailyGoal"></div>
+          <div class="settings-item-desc" data-i18n="settingDailyGoalDesc"></div>
+        </div>
+        <div class="settings-control-row">
+          <input type="number" class="input-number" id="inpDailyGoal" min="1" max="24">
+          <span class="text-dim" data-i18n="unitHrs"></span>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingShortBreak"></div>
+        </div>
+        <div class="settings-control-row">
+          <input type="number" class="input-number" id="inpShortBreak" min="1" max="60">
+          <span class="text-dim" data-i18n="unitMin"></span>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingLongBreak"></div>
+        </div>
+        <div class="settings-control-row">
+          <input type="number" class="input-number" id="inpLongBreak" min="1" max="60">
+          <span class="text-dim" data-i18n="unitMin"></span>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingAutoStart"></div>
+          <div class="settings-item-desc" data-i18n="settingAutoStartDesc"></div>
+        </div>
+        <label class="switch-control">
+          <input type="checkbox" id="chkAutoStart">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingSound"></div>
+        </div>
+        <label class="switch-control">
+          <input type="checkbox" id="chkSound">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title" data-i18n="settingsApp"></div>
+      
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingThemeColor"></div>
+        </div>
+        <div class="color-swatches" id="colorSwatches"></div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingAppearance"></div>
+        </div>
+        <div class="segment-control" id="appearanceSeg">
+          <button data-mode="dark" data-i18n="modeDark"></button>
+          <button data-mode="light" data-i18n="modeLight"></button>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingLanguage"></div>
+        </div>
+        <div class="segment-control" id="languageSeg">
+          <button data-lang="ar">العربية</button>
+          <button data-lang="en">English</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title" data-i18n="settingsData"></div>
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingExport"></div>
+          <div class="settings-item-desc" data-i18n="settingExportDesc"></div>
+        </div>
+        <button class="btn" id="btnExportData" data-i18n="btnExport"></button>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="settingImport"></div>
+          <div class="settings-item-desc" data-i18n="settingImportDesc"></div>
+        </div>
+        <div>
+          <input type="file" id="fileImport" accept=".json" style="display:none;">
+          <button class="btn" id="btnImportData" data-i18n="btnImport"></button>
+        </div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" style="color:var(--danger);" data-i18n="settingResetAll"></div>
+        </div>
+        <button class="btn" style="color:var(--danger); border-color:var(--danger);" id="btnResetAll" data-i18n="btnResetAll"></button>
+      </div>
+    </div>
+  
+    <div class="settings-group" id="installGroup" hidden>
+      <div class="settings-group-title" data-i18n="installTitle"></div>
+      <div class="settings-item">
+        <div class="settings-item-info"><div class="settings-item-title" data-i18n="installDesc"></div></div>
+        <button class="btn dev-wa" id="btnInstall" type="button" data-i18n="installBtn"></button>
+      </div>
+    </div>
+
+    <div class="settings-group" id="devGroup">
+      <div class="settings-group-title" data-i18n="settingsDev"></div>
+      <div class="settings-item">
+        <div class="settings-item-info">
+          <div class="settings-item-title" data-i18n="devName"></div>
+          <div class="dev-desc">+20 109 944 8835</div>
+        </div>
+        <a class="btn dev-wa" href="https://wa.me/201099448835" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z"/></svg>
+          <span data-i18n="devContact"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD7PETuAQfPmxg8_DQCjwIXE6rdIZS1oKg",
+    authDomain: "foucs-7df25.firebaseapp.com",
+    databaseURL: "https://foucs-7df25-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "foucs-7df25",
+    storageBucket: "foucs-7df25.firebasestorage.app",
+    messagingSenderId: "144146353306",
+    appId: "1:144146353306:web:2f5f205dc42a9ac4576323",
+    measurementId: "G-R4WY2VC8NN"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+  const db = getDatabase(firebaseApp);
+
+  let currentUserId = null;
+  let cloudReady = false;
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const ICONS = {"fire": "M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z", "up": "M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z", "down": "M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z", "trophy": "M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z", "target": "M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z", "timer": "M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61 1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.96 8.96 0 0 0 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z", "check": "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z", "star": "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z", "flag": "M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z", "bolt": "M7 2v11h3v9l7-12h-4l4-8z", "moon": "M10 2c-1.82 0-3.53.5-5 1.35C7.99 5.08 10 8.3 10 12s-2.01 6.92-5 8.65C6.47 21.5 8.18 22 10 22c5.52 0 10-4.48 10-10S15.52 2 10 2z", "sun": "M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z", "hourglass": "M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6zm10 14.5V20H8v-3.5l4-4 4 4zm-4-5l-4-4V4h8v3.5l-4 4z", "edit": "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z", "up_trend": "M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z", "down_trend": "M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z", "compass": "M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z", "clock": "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z", "balance": "M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z", "calendar": "M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z", "thumb": "M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z", "pause": "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z", "sparkle": "M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z", "leaf": "M6.05 8.05c-2.73 2.73-2.73 7.15-.02 9.88 1.47-3.4 4.09-6.24 7.36-7.93-2.77 2.34-4.71 5.61-5.39 9.32 2.6 1.23 5.8.78 7.95-1.37C19.43 14.47 20 4 20 4S9.53 3.43 6.05 8.05z", "done_all": "M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z", "headphones": "M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z", "place": "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z", "share": "M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z", "close": "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z", "plus": "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z", "chev_l": "M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z", "chev_r": "M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"};
+  const ic = (n, c = "") => ICONS[n] ? `<svg class="ic ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n]}"/></svg>` : "";
+  const rich = (t) => esc(t).replace(/\{(\w+)\}/g, (_, n) => ic(n));
+
+  const I18N = {
+    ar: {
+      appTitle: "تركيز", tabFocus: "الرئيسية", tabWorship: "العبادات", tabLifestyle: "نمط الحياة", tabStats: "الإحصائيات", tabSettings: "الإعدادات",
+      modePomodoro: "تركيز", modeShortBreak: "استراحة قصيرة", modeLongBreak: "استراحة طويلة",
+      statusReady: "جاهز للبدء", statusFocusing: "جارٍ التركيز", statusPaused: "متوقف مؤقتًا", statusBreak: "استراحة",
+      btnStart: "ابدأ", btnPause: "إيقاف", btnResume: "استئناف", btnAdd: "إضافة", btnEdit: "تعديل",
+      heatmapTitle: "نشاطك المكتمل", heatmapLess: "أقل", heatmapMore: "أكثر",
+      lifestyleProgressTitle: "التقدم اليومي", 
+      statsFocusHeading: "التركيز", statsWorshipHeading: "إحصائيات العبادات",
+      statTotalFocus: "إجمالي وقت التركيز", statSessions: "الجلسات المكتملة", statStreak: "سلسلة الأيام", 
+      statAvgPerDay: "متوسط التركيز اليومي", statBestDay: "أفضل يوم", statActiveDays: "أيام نشطة",
+      statWorshipAvg: "متوسط إنجاز العبادات", statPrayersTotal: "الصلوات المكتملة", statSunnahTotal: "السنن المكتملة", statAdhkarTotal: "الأذكار المكتملة",
+      statBestWorship: "أفضل يوم عبادة", statPrayerRate: "نسبة إتمام الصلوات", statQuranDays: "أيام قراءة القرآن", statNightTotal: "عبادات الليل",
+      statsWorshipHistoryHeading: "سجل تقدم العبادات", worshipHistoryEmpty: "لا يوجد سجل عبادات بعد لهذه الفترة",
+      filterWeek: "أسبوع", filterMonth: "شهر", filterYear: "سنة",
+      settingsTimer: "إعدادات المؤقت", settingPomodoro: "مدة جلسة التركيز", settingPomodoroDesc: "الوقت المخصص للعمل العميق", 
+      settingDailyGoal: "الهدف اليومي (ساعات)", settingDailyGoalDesc: "عدد ساعات التركيز المستهدفة يومياً",
+      settingShortBreak: "استراحة قصيرة", settingLongBreak: "استراحة طويلة", settingAutoStart: "تشغيل الجلسات تلقائياً", settingAutoStartDesc: "بدء الاستراحة والعمل فور الانتهاء", settingSound: "المؤثرات الصوتية",
+      settingsHabits: "إدارة عادات نمط الحياة", newHabitPlaceholder: "اسم العادة الجديدة...",
+      settingsApp: "المظهر واللغة", settingThemeColor: "لون التمييز الأساسي", settingAppearance: "مظهر التطبيق", modeDark: "داكن", modeLight: "فاتح", settingLanguage: "لغة الواجهة",
+      settingsData: "البيانات والنسخ الاحتياطي", settingExport: "تصدير البيانات", settingExportDesc: "حفظ نسخة احتياطية كملف JSON", btnExport: "تصدير", settingImport: "استيراد البيانات", settingImportDesc: "استعادة بياناتك من ملف JSON", btnImport: "استيراد", settingResetAll: "مسح جميع البيانات", btnResetAll: "تأكيد المسح",
+      unitMin: "دقيقة", unitHrs: "ساعة", unitDays: "يوم", 
+      toastHabitDone: "خطوة رائعة! تم تسجيل إنجازك بنجاح.", 
+      toastSessionDone: "أحسنت عملاً! انتهت الجلسة، خذ نفساً عميقاً واسترح قليلاً.", 
+      toastDataExported: "تم تجهيز نسختك الاحتياطية بنجاح.", 
+      toastDataImported: "مرحباً بعودتك! تم استرجاع بياناتك بنجاح.", 
+      toastDataCleared: "تم تصفير جميع بياناتك وبدء صفحة جديدة.",
+      worshipProgressTitle: "متابعة العبادات اليومية", wsPrayers: "الصلوات", wsAdhkar: "الأذكار", wsQuran: "القرآن الكريم", wsDaily: "عبادات يومية", wsSunnah: "سنن رواتب", wsNight: "أخرى",
+      wsKahf: "سورة الكهف", wsKahfDesc: "قراءة سورة الكهف يوم الجمعة",
+      settingsAccount: "الحساب", settingAccountEmail: "البريد الإلكتروني المسجل", btnLogout: "تسجيل الخروج",
+      goalToday: "هدف اليوم", prayerNext: "الصلاة القادمة", opensAt: "تُفتح الساعة", toastLocked: "لم يحن وقتها بعد", toastOffline: "تعذّر تحميل بياناتك، تحقق من الاتصال. لن يتم الحفظ حتى يعود الاتصال.",
+      loaderText: "جاري إعداد مساحتك الخاصة...", authLoginTitle: "مرحباً بك في تركيز", authSignupTitle: "إنشاء حساب جديد", authSubtitle: "سجّل دخولك لحفظ بياناتك ومزامنتها بأمان عبر جميع أجهزتك",
+      authEmail: "البريد الإلكتروني", authPassword: "كلمة المرور", authPasswordNew: "كلمة المرور (6 أحرف على الأقل)", authName: "الاسم الكامل", authAge: "العمر",
+      authLoginBtn: "تسجيل الدخول", authSignupBtn: "إنشاء الحساب", authForgot: "نسيت كلمة المرور؟", authToSignup: "مستخدم جديد؟ اضغط هنا لإنشاء حساب", authToLogin: "لديك حساب بالفعل؟ قم بتسجيل الدخول",
+      authNeedEmail: "اكتب بريدك الإلكتروني أولاً ثم اضغط «نسيت كلمة المرور».", authResetSent: "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك.",
+      errInvalidEmail: "عذراً، صيغة البريد الإلكتروني غير صحيحة.", errDisabled: "تم إيقاف هذا الحساب. يرجى التواصل مع الدعم.", errNoUser: "لم نتمكن من العثور على حساب بهذا البريد الإلكتروني.", errWrongPass: "كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.", errInUse: "هذا البريد الإلكتروني مستخدم بالفعل لحساب آخر.", errWeak: "كلمة المرور ضعيفة جداً. يرجى استخدام 6 أحرف على الأقل.", errNetwork: "خطأ في الاتصال بالشبكة. تأكد من اتصالك بالإنترنت.", errMany: "محاولات كثيرة خاطئة. يرجى المحاولة لاحقاً.", errCred: "بيانات الدخول غير صحيحة، تأكد من البريد وكلمة المرور.", errDefault: "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+      welcomeUser: "مرحباً بك،", friend: "صديقي", goToday: "العودة لليوم", prevDay: "اليوم السابق", nextDay: "اليوم التالي", resetLabel: "إعادة ضبط", skipLabel: "تخطي", delLabel: "حذف",
+      settingsDev: "المطور", offlineMsg: "أنت غير متصل بالإنترنت — ستتم مزامنة تغييراتك عند عودة الاتصال.", installTitle: "تثبيت التطبيق", installDesc: "أضف «تركيز» إلى شاشتك الرئيسية لتجربة تطبيق كاملة.", installBtn: "تثبيت", ambLabel: "أصوات التركيز", ambOff: "إيقاف", ambBrown: "ضوضاء بنية", ambWhite: "ضوضاء بيضاء", ambRain: "مطر", toastGoalReached: "حققت هدف اليوم! عمل رائع.", toastCopied: "تم نسخ ملخص أدائك", prayerMethod: "طريقة حساب المواقيت", devName: "المهندس محمود وائل", devContact: "تواصل عبر واتساب",
+      metaTitle: "تركيز — مؤقت وعادات", metaDesc: "تركيز: مؤقت بومودورو، عادات يومية، متابعة العبادات وإحصائيات متقدمة في تطبيق واحد.", toastLocDenied: "تعذّر تحديد موقعك، سيتم استخدام الموقع الافتراضي (القاهرة)", locDefault: "الموقع الافتراضي (القاهرة) — اضغط لتحديد موقعك", locCurrent: "موقعك الحالي — اضغط للتحديث", toastImportError: "الملف غير صالح، تعذّر استيراد البيانات."
+    },
+    en: {
+      appTitle: "Focus", tabFocus: "Timer", tabWorship: "Worship", tabLifestyle: "Lifestyle", tabStats: "Statistics", tabSettings: "Settings",
+      modePomodoro: "Focus", modeShortBreak: "Short Break", modeLongBreak: "Long Break",
+      statusReady: "Ready", statusFocusing: "Focusing", statusPaused: "Paused", statusBreak: "Taking a break",
+      btnStart: "Start", btnPause: "Pause", btnResume: "Resume", btnAdd: "Add", btnEdit: "Edit",
+      heatmapTitle: "Completion Activity", heatmapLess: "Less", heatmapMore: "More",
+      lifestyleProgressTitle: "Daily Progress", 
+      statsFocusHeading: "Focus", statsWorshipHeading: "Worship Stats",
+      statTotalFocus: "Total Focus Time", statSessions: "Completed Sessions", statStreak: "Day Streak", 
+      statAvgPerDay: "Daily Average", statBestDay: "Best Day", statActiveDays: "Active Days",
+      statWorshipAvg: "Worship Avg (%)", statPrayersTotal: "Completed Prayers", statSunnahTotal: "Completed Sunnah", statAdhkarTotal: "Completed Adhkar",
+      statBestWorship: "Best Worship Day", statPrayerRate: "Prayer Completion Rate", statQuranDays: "Quran Reading Days", statNightTotal: "Night Worship",
+      statsWorshipHistoryHeading: "Worship Progress History", worshipHistoryEmpty: "No worship history yet for this period",
+      filterWeek: "Week", filterMonth: "Month", filterYear: "Year",
+      settingsTimer: "Timer Preferences", settingPomodoro: "Focus Duration", settingPomodoroDesc: "Time dedicated to deep work", 
+      settingDailyGoal: "Daily Goal (Hours)", settingDailyGoalDesc: "Target number of focus hours per day",
+      settingShortBreak: "Short Break", settingLongBreak: "Long Break", settingAutoStart: "Auto-start Sessions", settingAutoStartDesc: "Automatically transition between work and break", settingSound: "Sound Effects",
+      settingsHabits: "Manage Lifestyle Habits", newHabitPlaceholder: "New habit name...",
+      settingsApp: "Appearance & Localization", settingThemeColor: "Accent Color", settingAppearance: "Theme", modeDark: "Dark", modeLight: "Light", settingLanguage: "Language",
+      settingsData: "Data & Backup", settingExport: "Export Data", settingExportDesc: "Save your data as a JSON file", btnExport: "Export", settingImport: "Import Data", settingImportDesc: "Restore your data from a JSON file", btnImport: "Import", settingResetAll: "Danger: Reset All Data", btnResetAll: "Confirm Reset",
+      unitMin: "min", unitHrs: "hrs", unitDays: "days", 
+      toastHabitDone: "Great job! Your progress has been logged.", 
+      toastSessionDone: "Session completed! Take a deep breath and rest a bit.", 
+      toastDataExported: "Your backup is ready.", 
+      toastDataImported: "Welcome back! Your data has been restored.", 
+      toastDataCleared: "All data cleared for a fresh start.",
+      worshipProgressTitle: "Daily Worship Progress", wsPrayers: "Prayers", wsAdhkar: "Adhkar", wsQuran: "Quran", wsDaily: "Daily", wsSunnah: "Sunnah", wsNight: "Other",
+      wsKahf: "Surat Al-Kahf", wsKahfDesc: "Read Surat Al-Kahf on Friday",
+      settingsAccount: "Account", settingAccountEmail: "Signed in as", btnLogout: "Log Out",
+      goalToday: "Today's goal", prayerNext: "Next prayer", opensAt: "Opens at", toastLocked: "Not time yet", toastOffline: "Could not load your data. Check your connection; changes will not be saved until it returns.",
+      loaderText: "Setting up your space...", authLoginTitle: "Welcome to Focus", authSignupTitle: "Create a new account", authSubtitle: "Sign in to save and securely sync your data across all your devices",
+      authEmail: "Email", authPassword: "Password", authPasswordNew: "Password (at least 6 characters)", authName: "Full name", authAge: "Age",
+      authLoginBtn: "Sign in", authSignupBtn: "Create account", authForgot: "Forgot your password?", authToSignup: "New here? Tap to create an account", authToLogin: "Already have an account? Sign in",
+      authNeedEmail: "Enter your email first, then tap \"Forgot your password?\".", authResetSent: "A password reset link has been sent to your email.",
+      errInvalidEmail: "Sorry, the email format is invalid.", errDisabled: "This account has been disabled. Please contact support.", errNoUser: "We couldn't find an account with this email.", errWrongPass: "Incorrect password. Please try again.", errInUse: "This email is already used by another account.", errWeak: "Password is too weak. Use at least 6 characters.", errNetwork: "Network error. Check your internet connection.", errMany: "Too many failed attempts. Please try again later.", errCred: "Invalid credentials. Check your email and password.", errDefault: "An unexpected error occurred. Please try again.",
+      welcomeUser: "Welcome,", friend: "friend", goToday: "Back to today", prevDay: "Previous day", nextDay: "Next day", resetLabel: "Reset", skipLabel: "Skip", delLabel: "Delete",
+      settingsDev: "Developer", offlineMsg: "You are offline — your changes will sync when the connection returns.", installTitle: "Install app", installDesc: "Add Focus to your home screen for a full app experience.", installBtn: "Install", ambLabel: "Focus sounds", ambOff: "Off", ambBrown: "Brown noise", ambWhite: "White noise", ambRain: "Rain", toastGoalReached: "Daily goal reached! Great work.", toastCopied: "Performance summary copied", prayerMethod: "Prayer calculation method", devName: "Eng. Mahmoud Wael", devContact: "Chat on WhatsApp",
+      metaTitle: "Focus — Timer & Habits", metaDesc: "Focus: Pomodoro timer, daily habits, worship tracking and advanced analytics in one app.", toastLocDenied: "Couldn't get your location, using default (Cairo)", locDefault: "Default location (Cairo) — tap to set yours", locCurrent: "Your location — tap to refresh", toastImportError: "Invalid file, could not import data."
+    }
+  };
+
+  const WORSHIP_ITEMS = {
+    prayers: [
+      { id: "fajr", ar: "الفجر", en: "Fajr", icon: `<svg viewBox="0 0 24 24"><path d="M5.44 17h13.12c-.22-2.83-2.07-5.32-4.71-6.49-.66-.29-1.38-.45-2.12-.51-3.6-.28-6.68 2.3-6.29 6.01L5.44 17zM12 3c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1zm6.36 4.64c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM20 11h-2c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1zM4.05 9.05c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM6 12c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1zm16 7H2c-.55 0-1 .45-1 1s.45 1 1 1h20c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>` },
+      { id: "dhuhr", ar: "الظهر", en: "Dhuhr", icon: `<svg viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-12c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1zm6.36 4.64c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM20 11h-2c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1zm-2.95 6.95c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM12 19c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1zm-6.36-1.36c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41zM6 12c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1zm-1.95-2.95c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41z"/></svg>` },
+      { id: "asr", ar: "العصر", en: "Asr", icon: `<svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h.71C7.37 7.69 9.48 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3s-1.34 3-3 3z"/></svg>` },
+      { id: "maghrib", ar: "المغرب", en: "Maghrib", icon: `<svg viewBox="0 0 24 24"><path d="M7.44 17h9.12c-.22-2.83-2.07-5.32-4.71-6.49-.66-.29-1.38-.45-2.12-.51-3.6-.28-6.68 2.3-6.29 6.01L7.44 17zM12 5c-3.86 0-7 3.14-7 7h14c0-3.86-3.14-7-7-7zM22 19H2c-.55 0-1 .45-1 1s.45 1 1 1h20c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>` },
+      { id: "isha", ar: "العشاء", en: "Isha", icon: `<svg viewBox="0 0 24 24"><path d="M11.1 12.08C8.77 7.57 10.6 3.6 11.63 2.01c.17-.26.04-.63-.26-.71-4.94-1.38-10.02 2.15-9.35 7.69.49 4.09 3.86 7.42 7.96 7.84 5.3.55 9.43-3.41 9.92-8.31.05-.51-.48-.84-.91-.6-2.58 1.4-5.38.74-7.89-3.84zM12 21c-4.96 0-9-4.04-9-9 0-4.08 2.72-7.53 6.46-8.66-.46 3.49 1.15 6.94 4.3 8.75 3.01 1.73 6.74 1.1 9.17-1.46C22.04 15.7 17.65 21 12 21z"/></svg>` }
+    ],
+    adhkar: [
+      { id: "athkarMorning", arT: "أذكار الصباح", arS: "", enT: "Morning Adhkar", enS: "", icon: `<svg viewBox="0 0 24 24"><path d="M12 3c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1zm6.36 4.64c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM20 11h-2c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1zM4.05 9.05c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM6 12c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1zM5 19h14v2H5zM12 7c-2.76 0-5 2.24-5 5h10c0-2.76-2.24-5-5-5z"/></svg>` },
+      { id: "athkarEvening", arT: "أذكار المساء", arS: "", enT: "Evening Adhkar", enS: "", icon: `<svg viewBox="0 0 24 24"><path d="M11.1 12.08C8.77 7.57 10.6 3.6 11.63 2.01c.17-.26.04-.63-.26-.71-4.94-1.38-10.02 2.15-9.35 7.69.49 4.09 3.86 7.42 7.96 7.84 5.3.55 9.43-3.41 9.92-8.31.05-.51-.48-.84-.91-.6-2.58 1.4-5.38.74-7.89-3.84zM5 19h14v2H5z"/></svg>` },
+      { id: "athkarSleep", arT: "أذكار النوم", arS: "ورد ما قبل النوم", enT: "Sleep Adhkar", enS: "Before sleep", icon: `<svg viewBox="0 0 24 24"><path d="M2 19h20v2H2zM4 15h16v2H4zM6 11h12v2H6zM15.5 3c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5S18 6.88 18 5.5 16.88 3 15.5 3zm0 3.5c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM8 4c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>` }
+    ],
+    quran: [
+      { id: "quran", arT: "قراءة القرآن", arS: "ورد يومي من القرآن الكريم", enT: "Quran Reading", enS: "Daily Quran portion", icon: `<svg viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>` }
+    ],
+    daily: [
+      { id: "duha", arT: "صلاة الضحى", arS: "من 2 إلى 8 ركعات بعد شروق الشمس", enT: "Duha Prayer", enS: "2 to 8 Rak'ahs after sunrise", icon: `<svg viewBox="0 0 24 24"><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zM20 11h-2c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1zM4.05 9.05c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41zM6 12c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1zm14 7H4c-.55 0-1 .45-1 1s.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>` }
+    ],
+    sunnah: [
+      { id: "sunnahFajr", arT: "سنة الفجر", arS: "ركعتان قبل صلاة الفجر", enT: "Sunnah Fajr", enS: "2 Rak'ahs before Fajr", icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h14v-8h3L12 2zm0 2.83l5 5V18H7v-8.17l5-5zM12 7c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>` },
+      { id: "sunnahDhuhrBefore", arT: "سنة الظهر القبلية", arS: "4 ركعات قبل صلاة الظهر", enT: "Sunnah Dhuhr (Before)", enS: "4 Rak'ahs before Dhuhr", icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h14v-8h3L12 2zm0 2.83l5 5V18H7v-8.17l5-5zM12 7c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>` },
+      { id: "sunnahDhuhrAfter", arT: "سنة الظهر البعدية", arS: "ركعتان بعد صلاة الظهر", enT: "Sunnah Dhuhr (After)", enS: "2 Rak'ahs after Dhuhr", icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h14v-8h3L12 2zm0 2.83l5 5V18H7v-8.17l5-5zM12 7c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>` },
+      { id: "sunnahMaghrib", arT: "سنة المغرب", arS: "ركعتان بعد صلاة المغرب", enT: "Sunnah Maghrib", enS: "2 Rak'ahs after Maghrib", icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h14v-8h3L12 2zm0 2.83l5 5V18H7v-8.17l5-5zM12 7c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>` },
+      { id: "sunnahIsha", arT: "سنة العشاء", arS: "ركعتان بعد صلاة العشاء", enT: "Sunnah Isha", enS: "2 Rak'ahs after Isha", icon: `<svg viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h14v-8h3L12 2zm0 2.83l5 5V18H7v-8.17l5-5zM12 7c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>` }
+    ],
+    night: [
+      { id: "qiyam", arT: "قيام الليل", arS: "من بعد صلاة العشاء حتى طلوع الفجر", enT: "Qiyam Al-Layl", enS: "From after Isha until Fajr", icon: `<svg viewBox="0 0 24 24"><path d="M11.1 12.08C8.77 7.57 10.6 3.6 11.63 2.01c.17-.26.04-.63-.26-.71-4.94-1.38-10.02 2.15-9.35 7.69.49 4.09 3.86 7.42 7.96 7.84 5.3.55 9.43-3.41 9.92-8.31.05-.51-.48-.84-.91-.6-2.58 1.4-5.38.74-7.89-3.84zM12 21c-4.96 0-9-4.04-9-9 0-4.08 2.72-7.53 6.46-8.66-.46 3.49 1.15 6.94 4.3 8.75 3.01 1.73 6.74 1.1 9.17-1.46C22.04 15.7 17.65 21 12 21z"/></svg>` },
+      { id: "witr", arT: "صلاة الوتر", arS: "ركعة أو ثلاث أو خمس أو سبع", enT: "Witr Prayer", enS: "1, 3, 5, or 7 Rak'ahs", icon: `<svg viewBox="0 0 24 24"><path d="M18.49 9.89l.26-2.79-2.74-.62-1.43-2.41L12 5.18 9.42 4.07 7.99 6.48l-2.74.62.26 2.79-2.16 1.76 1.14 2.54-.86 2.65 2.56 1.05.86 2.66 2.73-.66 2.22 1.63 2.22-1.63 2.73.66.86-2.66 2.56-1.05-.86-2.65 1.14-2.54-2.16-1.76zm-6.49 7.11c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg>` }
+    ]
+  };
+
+  const THEMES = [
+    { id: "moss", color: "#7fa389", dim: "#4c6353", soft: "rgba(127,163,137,0.16)" },
+    { id: "ocean", color: "#6a93b0", dim: "#3f5c70", soft: "rgba(106,147,176,0.16)" },
+    { id: "amber", color: "#c99a5b", dim: "#8a6a3c", soft: "rgba(201,154,91,0.16)" },
+    { id: "rose", color: "#b17c8c", dim: "#7a4f5c", soft: "rgba(177,124,140,0.16)" },
+    { id: "violet", color: "#9089b0", dim: "#5f5878", soft: "rgba(144,137,176,0.16)" },
+    { id: "slate", color: "#8a9ba8", dim: "#5c6b77", soft: "rgba(138,155,168,0.16)" },
+    { id: "coral", color: "#d97368", dim: "#9c4a41", soft: "rgba(217,115,104,0.16)" },
+    { id: "indigo", color: "#6a73b0", dim: "#414773", soft: "rgba(106,115,176,0.16)" }
+  ];
+
+  const DEFAULT_HABITS = [
+    { id: "pray", titleAr: "الصلاة", titleEn: "Pray", icon: `<svg viewBox="0 0 24 24"><path d="M2,21L2,19L5,19L5,10L10,4L15,10L15,19L18,19L18,21L2,21 M7,19L13,19L13,11L10,7L7,11L7,19Z"/></svg>` },
+    { id: "work", titleAr: "العمل", titleEn: "Work", icon: `<svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>` },
+    { id: "learn", titleAr: "التعلم", titleEn: "Learn", icon: `<svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>` },
+    { id: "gym", titleAr: "التمرين الرياضي", titleEn: "Gym", icon: `<svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43 1.43-1.43-1.43-1.43z"/></svg>` },
+    { id: "eat", titleAr: "أكل صحي", titleEn: "Healthy Food", icon: `<svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>` },
+    { id: "reading", titleAr: "القراءة", titleEn: "Reading", icon: `<svg viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>` },
+    { id: "walk", titleAr: "المشي", titleEn: "Walk", icon: `<svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg>` }
+  ];
+
+  const DateUtils = {
+    getTodayStr: () => {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    getRelativeDateStr: (daysOffset) => {
+      const d = new Date();
+      d.setDate(d.getDate() + daysOffset);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+    formatTime: (totalSeconds) => {
+      const m = Math.floor(totalSeconds / 60);
+      const s = totalSeconds % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+  };
+
+  class SynthAudio {
+    constructor() { this.ctx = null; }
+    init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+    playTone(freq, type, duration, vol, startTime) {
+      if (!app.settings.soundEnabled) return;
+      this.init();
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(vol, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    }
+    playSuccess() {
+      if (!app.settings.soundEnabled) return;
+      this.init();
+      const now = this.ctx.currentTime;
+      this.playTone(600, 'sine', 0.1, 0.5, now);
+      this.playTone(800, 'sine', 0.2, 0.5, now + 0.1);
+    }
+    playComplete() {
+      if (!app.settings.soundEnabled) return;
+      this.init();
+      const now = this.ctx.currentTime;
+      for(let i=0; i<10; i++) {
+        this.playTone(i % 2 === 0 ? 500 : 700, 'triangle', 0.4, 0.5, now + (i * 0.5));
+      }
+    }
+    playTick() { 
+      if (!app.settings.soundEnabled) return;
+      this.init();
+      this.playTone(900, 'sine', 0.05, 0.1, this.ctx.currentTime); 
+    }
+  }
+  const audio = new SynthAudio();
+
+  class Confetti {
+    constructor() {
+      this.canvas = document.getElementById("confetti-canvas");
+      this.ctx = this.canvas.getContext("2d");
+      this.particles = [];
+      this.colors = ["#7fa389", "#c99a5b", "#d97368", "#6a93b0", "#e7e4dd"];
+      this.w = 0;
+      this.h = 0;
+      this.resize();
+      window.addEventListener("resize", () => this.resize());
+      this.loop();
+    }
+    resize() {
+      this.w = this.canvas.width = window.innerWidth;
+      this.h = this.canvas.height = window.innerHeight;
+    }
+    fire() {
+      for (let i = 0; i < 80; i++) {
+        this.particles.push({
+          x: this.w / 2, y: this.h / 2,
+          r: Math.random() * 6 + 2,
+          dx: Math.random() * 20 - 10, dy: Math.random() * -15 - 5,
+          c: this.colors[Math.floor(Math.random() * this.colors.length)],
+          tilt: Math.random() * 10, tiltAngle: 0, tiltAngleInc: (Math.random() * 0.07) + 0.05
+        });
+      }
+    }
+    loop() {
+      requestAnimationFrame(() => this.loop());
+      this.ctx.clearRect(0, 0, this.w, this.h);
+      for (let i = 0; i < this.particles.length; i++) {
+        let p = this.particles[i];
+        p.tiltAngle += p.tiltAngleInc;
+        p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) / 2;
+        p.x += Math.sin(p.tiltAngle) * 2;
+        p.dy += 0.2;
+        p.x += p.dx; p.y += p.dy;
+        this.ctx.beginPath();
+        this.ctx.lineWidth = p.r;
+        this.ctx.strokeStyle = p.c;
+        this.ctx.moveTo(p.x + p.tilt + p.r, p.y);
+        this.ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+        this.ctx.stroke();
+        if (p.y > this.h) this.particles.splice(i, 1);
+      }
+    }
+  }
+  const confetti = new Confetti();
+
+    const PrayerCalc = {
+    M: { egypt: { f: 19.5, i: 17.5 }, mwl: { f: 18, i: 17 }, makkah: { f: 18.5, m: 90 }, isna: { f: 15, i: 15 }, karachi: { f: 18, i: 18 } },
+    compute(date, lat, lng, method) {
+      const R = Math.PI / 180, sin = a => Math.sin(a * R), cos = a => Math.cos(a * R), tan = a => Math.tan(a * R);
+      const asin = x => Math.asin(x) / R, acos = x => Math.acos(x) / R, atan2 = (y, x) => Math.atan2(y, x) / R, acot = x => Math.atan(1 / x) / R;
+      const fx = (a, b) => a - b * Math.floor(a / b);
+      const y = date.getFullYear(), mo = date.getMonth(), da = date.getDate();
+      const jd = Date.UTC(y, mo, da) / 86400000 + 2440587.5 - lng / 360;
+      const tz = -new Date(y, mo, da, 12).getTimezoneOffset() / 60;
+      const sun = t => {
+        const D = jd + t - 2451545.0, g = fx(357.529 + 0.98560028 * D, 360), q = fx(280.459 + 0.98564736 * D, 360);
+        const L = fx(q + 1.915 * sin(g) + 0.020 * sin(2 * g), 360), e = 23.439 - 0.00000036 * D;
+        return { d: asin(sin(e) * sin(L)), eq: q / 15 - fx(atan2(cos(e) * sin(L), cos(L)), 360) / 15 };
+      };
+      const mid = t => fx(12 - sun(t).eq, 24);
+      const ang = (a, t, ccw) => {
+        const dc = sun(t).d, v = (-sin(a) - sin(dc) * sin(lat)) / (cos(dc) * cos(lat));
+        return (v < -1 || v > 1) ? NaN : acos(v) / 15 * (ccw ? -1 : 1);
+      };
+      const c = this.M[method] || this.M.egypt, T = {};
+      T.fajr = mid(5 / 24) + ang(c.f, 5 / 24, true);
+      T.sunrise = mid(6 / 24) + ang(0.833, 6 / 24, true);
+      T.dhuhr = mid(0.5);
+      T.asr = mid(13 / 24) + ang(-acot(1 + tan(Math.abs(lat - sun(13 / 24).d))), 13 / 24, false);
+      T.maghrib = mid(18 / 24) + ang(0.833, 18 / 24, false);
+      T.isha = c.m ? T.maghrib + c.m / 60 : mid(18 / 24) + ang(c.i, 18 / 24, false);
+      const base = new Date(y, mo, da).getTime(), out = {};
+      for (const k in T) {
+        if (!isFinite(T[k])) return null;
+        out[k] = new Date(base + (T[k] + tz - lng / 15) * 3600000);
+      }
+      return out;
+    }
+  };
+
+  const defaultSettings = {
+    lang: (() => { try { return localStorage.getItem("tarkeez_lang") === "en" ? "en" : "ar"; } catch (e) { return "ar"; } })(), mode: "dark", theme: "moss",
+    pomodoro: 25, shortBreak: 5, longBreak: 15,
+    dailyGoal: 4, autoStart: false, soundEnabled: true,
+    statsFilter: "week", prayerMethod: "egypt"
+  };
+
+  const defaultData = {
+    habits: {}, worship: {}, heatmap: {}, hourly: {}, sessionsByDay: {}, customHabits: JSON.parse(JSON.stringify(DEFAULT_HABITS)),
+    stats: { totalFocusSeconds: 0, sessionsCompleted: 0, currentStreak: 0 }
+  };
+
+  const app = {
+    settings: { ...defaultSettings },
+    data: { ...defaultData },
+    timer: {
+      mode: "pomodoro", isRunning: false, remaining: 25 * 60, intervalId: null, sessionCount: 0
+    },
+    activeDateOffset: 0,
+    
+    init() {
+      if (!this.data.customHabits || this.data.customHabits.length === 0) {
+        this.data.customHabits = JSON.parse(JSON.stringify(DEFAULT_HABITS));
+      }
+      this.applyTheme();
+      this.applyLanguage();
+      this.bindEvents();
+      this.renderAll();
+      this.updateTimerDisplay();
+      this.bindWorship();
+    },
+
+    getActiveDateStr() {
+      return DateUtils.getRelativeDateStr(this.activeDateOffset);
+    },
+    
+    t(key) { return I18N[this.settings.lang][key] || key; },
+    
+    saveSettings() { 
+      if (currentUserId && cloudReady) set(ref(db, `users/${currentUserId}/settings`), this.settings).catch(e => console.error("save settings failed", e));
+    },
+    saveData() { 
+      if (currentUserId && cloudReady) set(ref(db, `users/${currentUserId}/data`), this.data).catch(e => console.error("save data failed", e));
+    },
+    
+    showToast(key) {
+      const c = document.getElementById("toastContainer");
+      const t = document.createElement("div");
+      t.className = "toast";
+      t.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> <span>${this.t(key)}</span>`;
+      c.appendChild(t);
+      setTimeout(() => { t.classList.add("toast-hiding"); setTimeout(() => t.remove(), 300); }, 3000);
+    },
+
+    applyTheme() {
+      requestAnimationFrame(() => { const v = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim(), m = document.querySelector('meta[name="theme-color"]'); if (m && v) m.setAttribute("content", v); });
+      document.documentElement.classList.toggle("light", this.settings.mode === "light");
+      const theme = THEMES.find(t => t.id === this.settings.theme) || THEMES[0];
+      document.documentElement.style.setProperty("--accent", theme.color);
+      document.documentElement.style.setProperty("--accent-dim", theme.dim);
+      document.documentElement.style.setProperty("--accent-soft", theme.soft);
+      const themeMeta = document.getElementById("themeColorMeta");
+      if (themeMeta) themeMeta.setAttribute("content", this.settings.mode === "light" ? "#f2f0ea" : "#000000");
+    },
+
+    applyLanguage() {
+      document.documentElement.lang = this.settings.lang;
+      document.documentElement.dir = this.settings.lang === "ar" ? "rtl" : "ltr";
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        el.textContent = this.t(el.getAttribute("data-i18n"));
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        el.placeholder = this.t(el.getAttribute("data-i18n-placeholder"));
+      });
+      document.querySelectorAll("[data-i18n-title]").forEach(el => { el.title = this.t(el.getAttribute("data-i18n-title")); });
+      document.querySelectorAll("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", this.t(el.getAttribute("data-i18n-aria"))));
+      try { localStorage.setItem("tarkeez_lang", this.settings.lang); } catch (e) {}
+      const setMeta = (sel, v) => { const m = document.querySelector(sel); if (m) m.setAttribute("content", v); };
+      setMeta('meta[name="description"]', this.t("metaDesc")); setMeta('meta[property="og:description"]', this.t("metaDesc"));
+      setMeta('meta[property="og:title"]', this.t("metaTitle")); setMeta('meta[name="apple-mobile-web-app-title"]', this.t("appTitle"));
+      document.title = this.t("appTitle");
+      this.renderDateDisplay();
+      this.syncTimerLabels();
+      this.renderMethodSelect();
+      this.renderAmbientBtn();
+      this.renderGoal();
+      this.renderHeatmap();
+      if (this.onLanguage) this.onLanguage();
+    },
+
+    renderDateDisplay() {
+      const d = new Date();
+      d.setDate(d.getDate() + this.activeDateOffset);
+      const locale = this.settings.lang === "ar" ? "ar-EG-u-nu-latn" : "en-US";
+      let dateStr = d.toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" });
+      
+      const disp = document.getElementById("dateDisplay");
+      if (this.activeDateOffset < 0) {
+        disp.classList.add("historical");
+        dateStr += this.settings.lang === "ar" ? " (سابق)" : " (Past)";
+      } else {
+        disp.classList.remove("historical");
+      }
+      disp.textContent = dateStr;
+      
+      document.getElementById("btnNextDate").disabled = this.activeDateOffset >= 0;
+    },
+
+    calculateGlobalStreak() {
+      let streak = 0;
+      let checkOffset = 0;
+      
+      while (true) {
+        let d = DateUtils.getRelativeDateStr(-checkOffset);
+        let hasFocus = this.data.heatmap[d] > 0;
+        let hasHabits = false;
+        let hasWorship = false;
+
+        if (this.data.habits[d]) {
+          hasHabits = Object.values(this.data.habits[d]).some(v => v);
+        }
+        if (this.data.worship && this.data.worship[d]) {
+          hasWorship = Object.values(this.data.worship[d]).some(v => v);
+        }
+        
+        if (hasFocus || hasHabits || hasWorship) {
+          streak++;
+          checkOffset++;
+        } else {
+          if (checkOffset === 0) {
+            checkOffset++;
+            continue; 
+          } else {
+            break; 
+          }
+        }
+      }
+      this.data.stats.currentStreak = streak;
+      this.saveData();
+      return streak;
+    },
+
+    getWorshipDayStats(dateStr) {
+      const state = this.data.worship && this.data.worship[dateStr] ? this.data.worship[dateStr] : {};
+      const [y, m, d] = dateStr.split('-');
+      const dateObj = new Date(y, m - 1, d);
+      const isFriday = dateObj.getDay() === 5;
+
+      let pDone = 0;
+      WORSHIP_ITEMS.prayers.forEach(p => { if(state[p.id]) pDone++; });
+
+      const allOthers = [
+        ...WORSHIP_ITEMS.adhkar,
+        ...WORSHIP_ITEMS.quran,
+        ...WORSHIP_ITEMS.daily,
+        ...WORSHIP_ITEMS.sunnah,
+        ...WORSHIP_ITEMS.night
+      ];
+      let oCount = allOthers.length + (isFriday ? 1 : 0);
+      let oDone = 0;
+      allOthers.forEach(i => { if(state[i.id]) oDone++; });
+      if(isFriday && state["kahf"]) oDone++;
+
+      let percent = 0;
+      if(pDone > 0) percent += (pDone / WORSHIP_ITEMS.prayers.length) * 50;
+      if(oDone > 0) percent += (oDone / oCount) * 50;
+
+      let sCount = 0;
+      [...WORSHIP_ITEMS.sunnah, ...WORSHIP_ITEMS.night].forEach(s => { if(state[s.id]) sCount++; });
+      let aCount = 0;
+      WORSHIP_ITEMS.adhkar.forEach(a => { if(state[a.id]) aCount++; });
+      let nCount = 0;
+      WORSHIP_ITEMS.night.forEach(n => { if(state[n.id]) nCount++; });
+      const qDone = WORSHIP_ITEMS.quran.some(q => state[q.id]) ? 1 : 0;
+
+      return { percent: Math.round(percent), prayers: pDone, sunnah: sCount, adhkar: aCount, night: nCount, quran: qDone };
+    },
+
+    setTimerMode(mode) {
+      if (this.timer.isRunning) this.toggleTimer();
+      this.timer.mode = mode;
+      document.querySelectorAll("#timerModes button").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+      let min = this.settings[mode === "pomodoro" ? "pomodoro" : (mode === "shortBreak" ? "shortBreak" : "longBreak")];
+      this.timer.remaining = min * 60;
+      this.updateTimerDisplay();
+      document.getElementById("timeStatus").textContent = this.t("statusReady");
+    },
+
+    toggleTimer() {
+      const btnText = document.getElementById("btnToggleText");
+      const iconPlay = document.getElementById("iconPlay");
+      const iconPause = document.getElementById("iconPause");
+      const status = document.getElementById("timeStatus");
+
+      if (this.timer.isRunning) {
+        clearInterval(this.timer.intervalId);
+        this.timer.isRunning = false;
+        btnText.textContent = this.t("btnResume");
+        iconPlay.style.display = "block";
+        iconPause.style.display = "none";
+        status.textContent = this.t("statusPaused");
+        this.releaseWake();
+        this.renderGoal();
+        if (this.timer.mode === "pomodoro") {
+          this.saveData();
+          this.renderStats();
+          this.renderHeatmap();
+        }
+      } else {
+        audio.playTick();
+        this.haptic(12);
+        this.timer.isRunning = true;
+        btnText.textContent = this.t("btnPause");
+        iconPlay.style.display = "none";
+        iconPause.style.display = "block";
+        status.textContent = this.timer.mode === "pomodoro" ? this.t("statusFocusing") : this.t("statusBreak");
+        
+        this.timer.endAt = Date.now() + this.timer.remaining * 1000;
+        this.requestWake();
+        if ("Notification" in window && Notification.permission === "default") { try { Notification.requestPermission(); } catch (e) {} }
+        this.timer.intervalId = setInterval(() => this.tick(), 250);
+      }
+    },
+
+    handleTimerComplete(skipped = false) {
+      clearInterval(this.timer.intervalId);
+      this.timer.isRunning = false;
+      this.releaseWake();
+      if (!skipped) { audio.playComplete(); this.haptic([60, 40, 60]); this.showToast("toastSessionDone"); this.notifyDone(); }
+      
+      if (this.timer.mode === "pomodoro") {
+        if (!skipped) { this.data.stats.sessionsCompleted++; this.timer.sessionCount++;
+          this.data.sessionsByDay = this.data.sessionsByDay || {};
+          const td = DateUtils.getTodayStr(); this.data.sessionsByDay[td] = (this.data.sessionsByDay[td] || 0) + 1; }
+        this.calculateGlobalStreak();
+        this.saveData();
+        this.renderStats();
+        this.renderHeatmap();
+        this.renderGoal();
+        
+        let nextMode = this.timer.sessionCount % 4 === 0 ? "longBreak" : "shortBreak";
+        this.setTimerMode(nextMode);
+      } else {
+        this.setTimerMode("pomodoro");
+      }
+
+      if (this.settings.autoStart) {
+        setTimeout(() => this.toggleTimer(), 5000);
+      } else {
+        document.getElementById("btnToggleText").textContent = this.t("btnStart");
+        document.getElementById("iconPlay").style.display = "block";
+        document.getElementById("iconPause").style.display = "none";
+      }
+    },
+
+    resetTimer() {
+      if (this.timer.isRunning) this.toggleTimer();
+      this.setTimerMode(this.timer.mode);
+      document.getElementById("btnToggleText").textContent = this.t("btnStart");
+    },
+
+    updateTimerDisplay() {
+      document.getElementById("timeDisplay").textContent = DateUtils.formatTime(this.timer.remaining);
+      if (this.timer.isRunning) document.title = DateUtils.formatTime(this.timer.remaining) + " · " + this.t("appTitle");
+      let total = this.settings[this.timer.mode === "pomodoro" ? "pomodoro" : (this.timer.mode === "shortBreak" ? "shortBreak" : "longBreak")] * 60;
+      let ratio = 1 - (this.timer.remaining / total);
+      document.getElementById("timerRing").style.strokeDashoffset = 816.8 * (1 - Math.max(0, Math.min(1, ratio)));
+    },
+
+    tick() {
+      const t = this.timer;
+      const left = Math.max(0, Math.ceil((t.endAt - Date.now()) / 1000));
+      const elapsed = t.remaining - left;
+      if (elapsed > 0) {
+        t.remaining = left;
+        if (t.mode === "pomodoro") {
+          this.data.stats.totalFocusSeconds += elapsed;
+          const today = DateUtils.getTodayStr();
+          const before = this.data.heatmap[today] || 0;
+          this.data.heatmap[today] = before + elapsed;
+          const gs = (this.settings.dailyGoal || 4) * 3600;
+          if (before < gs && before + elapsed >= gs) { this.showToast("toastGoalReached"); try { confetti.fire(); } catch (e) {} this.haptic([80, 50, 80]); }
+          this.data.hourly = this.data.hourly || {};
+          const hk = "h" + new Date().getHours();
+          this.data.hourly[hk] = (this.data.hourly[hk] || 0) + elapsed;
+          t.unsaved = (t.unsaved || 0) + elapsed;
+          if (t.unsaved >= 60) { t.unsaved = 0; this.saveData(); this.renderStats(); this.renderGoal(); }
+        }
+        this.updateTimerDisplay();
+      }
+      if (left <= 0) this.handleTimerComplete();
+    },
+
+    requestWake() {
+      this.ambientSync();
+      try { if ("wakeLock" in navigator) navigator.wakeLock.request("screen").then(l => { this.wakeLock = l; }).catch(() => {}); } catch (e) {}
+    },
+    releaseWake() {
+      this.ambientSync();
+      try { if (this.wakeLock) this.wakeLock.release(); } catch (e) {}
+      this.wakeLock = null;
+      document.title = this.t("appTitle");
+    },
+    notifyDone() {
+      try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) new Notification(this.t("appTitle"), { body: this.t("toastSessionDone") }); } catch (e) {}
+    },
+
+    renderGoal() {
+      const fill = document.getElementById("goalFill");
+      if (!fill) return;
+      const secs = (this.data.heatmap && this.data.heatmap[DateUtils.getTodayStr()]) || 0;
+      const goalMin = Math.round((this.settings.dailyGoal || 4) * 60);
+      fill.style.width = Math.min(100, secs / 60 / goalMin * 100) + "%";
+      document.getElementById("goalCard").classList.toggle("reached", secs / 60 >= goalMin);
+      document.getElementById("goalText").textContent = `${Math.floor(secs / 60)} / ${goalMin} ${this.t("unitMin")}`;
+    },
+
+
+
+    renderAmbientBtn() {
+      const b = document.getElementById("btnAmbient");
+      if (!b) return;
+      if (!this.ambMode) { try { this.ambMode = localStorage.getItem("tarkeez_amb") || "off"; } catch (e) { this.ambMode = "off"; } }
+      b.innerHTML = ic("headphones") + esc(this.t("ambLabel") + ": " + this.t({ off: "ambOff", brown: "ambBrown", white: "ambWhite", rain: "ambRain" }[this.ambMode] || "ambOff"));
+      b.classList.toggle("on", this.ambMode !== "off");
+    },
+    ambientBuild(type) {
+      const ctx = audio.ctx, len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; if (type === "brown") { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; } else d[i] = w; }
+      const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+      const gain = ctx.createGain(); gain.gain.value = type === "brown" ? 0.35 : type === "rain" ? 0.1 : 0.06;
+      let node = src;
+      if (type === "rain") { const hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 900; const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 7000; src.connect(hp); hp.connect(lp); node = lp; }
+      node.connect(gain); gain.connect(ctx.destination); src.start();
+      return { src, gain };
+    },
+    ambientSync() {
+      const m = this.ambMode || "off", want = this.timer.isRunning && this.timer.mode === "pomodoro" && m !== "off";
+      try {
+        if (this.ambNode) { this.ambNode.src.stop(); this.ambNode = null; }
+        if (want) { audio.init(); if (audio.ctx.state === "suspended") audio.ctx.resume(); this.ambNode = this.ambientBuild(m); }
+      } catch (e) {}
+    },
+    keyOf(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; },
+    dayInfo(key) {
+      const secs = (this.data.heatmap || {})[key] || 0, goalS = (this.settings.dailyGoal || 4) * 3600;
+      const habits = this.data.customHabits || [], hs = (this.data.habits || {})[key] || {};
+      const hd = habits.reduce((n, h) => n + (hs[h.id] ? 1 : 0), 0), hp = habits.length ? hd / habits.length : 0;
+      const wp = this.getWorshipDayStats(key).percent / 100, fp = Math.min(1, secs / goalS);
+      return { secs, fp, hp, hd, ht: habits.length, wp, score: Math.round((fp * 0.4 + hp * 0.2 + wp * 0.4) * 100), sess: (this.data.sessionsByDay || {})[key] || 0 };
+    },
+    haptic(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} },
+    syncTimerLabels() {
+      const t = this.timer, run = t.isRunning, total = this.settings[t.mode] * 60, started = t.remaining < total;
+      const bt = document.getElementById("btnToggleText"), st = document.getElementById("timeStatus");
+      if (!bt || !st) return;
+      bt.textContent = this.t(run ? "btnPause" : started ? "btnResume" : "btnStart");
+      st.textContent = this.t(run ? (t.mode === "pomodoro" ? "statusFocusing" : "statusBreak") : started ? "statusPaused" : "statusReady");
+    },
+    renderMethodSelect() {
+      const sel = document.getElementById("selMethod");
+      if (!sel) return;
+      const isAr = this.settings.lang === "ar";
+      const names = { egypt: ["الهيئة المصرية للمساحة", "Egyptian Authority"], mwl: ["رابطة العالم الإسلامي", "Muslim World League"], makkah: ["أم القرى", "Umm al-Qura"], isna: ["أمريكا الشمالية", "ISNA"], karachi: ["كراتشي", "Karachi"] };
+      sel.innerHTML = Object.keys(names).map(k => `<option value="${k}">${names[k][isAr ? 0 : 1]}</option>`).join("");
+      sel.value = this.settings.prayerMethod || "egypt";
+    },
+    fmtTime(d) { return d ? d.toLocaleTimeString(this.settings.lang === "ar" ? "ar-EG-u-nu-latn" : "en-US", { hour: "numeric", minute: "2-digit", hour12: true }) : ""; },
+    getLoc() {
+      try { const l = JSON.parse(localStorage.getItem("tarkeez_loc")); if (l && isFinite(l.lat) && isFinite(l.lng)) return l; } catch (e) {}
+      return { lat: 30.0444, lng: 31.2357, def: true };
+    },
+    locate() {
+      if (!navigator.geolocation) { this.showToast("toastLocDenied"); return; }
+      navigator.geolocation.getCurrentPosition(pos => {
+        try { localStorage.setItem("tarkeez_loc", JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude })); } catch (e) {}
+        this.lastSig = null; this.worshipTick();
+      }, () => this.showToast("toastLocDenied"), { timeout: 10000, maximumAge: 3600000 });
+    },
+    getPrayerTimes(off) {
+      const loc = this.getLoc(), m = this.settings.prayerMethod || "egypt";
+      const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + off);
+      const key = [d.getFullYear(), d.getMonth(), d.getDate(), loc.lat.toFixed(2), loc.lng.toFixed(2), m].join("|");
+      this.ptCache = this.ptCache || {};
+      if (!(key in this.ptCache)) this.ptCache[key] = PrayerCalc.compute(d, loc.lat, loc.lng, m);
+      return this.ptCache[key];
+    },
+    worshipLock(id) {
+      const off = this.activeDateOffset;
+      if (off < 0) return null;
+      const pt = this.getPrayerTimes(off);
+      if (!pt) return null;
+      const map = { fajr: "fajr", dhuhr: "dhuhr", asr: "asr", maghrib: "maghrib", isha: "isha", athkarMorning: "fajr", athkarEvening: "asr", athkarSleep: "isha", sunnahFajr: "fajr", sunnahDhuhrBefore: "dhuhr", sunnahDhuhrAfter: "dhuhr", sunnahMaghrib: "maghrib", sunnahIsha: "isha", qiyam: "isha", witr: "isha", kahf: "fajr" };
+      const at = id === "duha" ? new Date(pt.sunrise.getTime() + 15 * 60000) : pt[map[id]];
+      if (!at) return null;
+      return off > 0 || Date.now() < at.getTime() ? at : null;
+    },
+    worshipTick() {
+      const pt = this.getPrayerTimes(0), nameEl = document.getElementById("npName");
+      if (!nameEl) return;
+      const isAr = this.settings.lang === "ar", now = Date.now(), order = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+      if (!pt) { nameEl.textContent = "—"; return; }
+      let next = order.find(k => pt[k].getTime() > now), at = next && pt[next];
+      if (!next) { next = "fajr"; const t2 = this.getPrayerTimes(1); at = t2 && t2.fajr; }
+      this.nextPrayerId = next;
+      const item = WORSHIP_ITEMS.prayers.find(x => x.id === next);
+      nameEl.textContent = isAr ? item.ar : item.en;
+      document.getElementById("npTime").textContent = this.fmtTime(at);
+      const sec = Math.max(0, Math.floor((at.getTime() - now) / 1000));
+      document.getElementById("npCount").textContent = [Math.floor(sec / 3600), Math.floor(sec % 3600 / 60), sec % 60].map(v => String(v).padStart(2, "0")).join(":");
+      const ids = ["fajr", "dhuhr", "asr", "maghrib", "isha", "athkarMorning", "athkarEvening", "athkarSleep", "duha", "sunnahFajr", "sunnahDhuhrBefore", "sunnahDhuhrAfter", "sunnahMaghrib", "sunnahIsha", "qiyam", "witr", "kahf"];
+      const sig = [next, this.activeDateOffset, this.settings.lang, this.getLoc().lat, this.settings.prayerMethod, ...ids.map(i => this.worshipLock(i) ? 1 : 0)].join("");
+      if (sig === this.lastSig) return;
+      this.lastSig = sig;
+      const row = document.getElementById("npRow");
+      row.innerHTML = "";
+      order.forEach(k => {
+        const it = WORSHIP_ITEMS.prayers.find(x => x.id === k), div = document.createElement("div");
+        div.className = "np-t" + (k === next ? " on" : "");
+        div.innerHTML = `<span>${esc(isAr ? it.ar : it.en)}</span><b>${this.fmtTime(pt[k])}</b>`;
+        row.appendChild(div);
+      });
+      document.getElementById("npLoc").innerHTML = ic("place") + esc(this.t(this.getLoc().def ? "locDefault" : "locCurrent"));
+      this.renderWorship();
+    },
+    bindWorship() {
+      document.getElementById("btnAmbient").addEventListener("click", () => {
+        const order = ["off", "brown", "white", "rain"];
+        this.ambMode = order[(order.indexOf(this.ambMode || "off") + 1) % order.length];
+        try { localStorage.setItem("tarkeez_amb", this.ambMode); } catch (e) {}
+        this.renderAmbientBtn(); this.ambientSync();
+      });
+      document.getElementById("insights").addEventListener("click", e => {
+        const seg = e.target.closest("[data-perf]");
+        if (seg) { this.perfRange = seg.dataset.perf; this.perfOff = 0; this.renderInsights(); return; }
+        const nv = e.target.closest("[data-pnav]");
+        if (nv && !nv.disabled) { const v = Number(nv.dataset.pnav); this.perfOff = v === 0 ? 0 : Math.min(0, (this.perfOff || 0) + v); this.haptic(8); this.renderInsights(); return; }
+        const jp = e.target.closest("[data-pjump]");
+        if (jp) { const [r, o] = jp.dataset.pjump.split(":"); this.perfRange = r; this.perfOff = Number(o); this.renderInsights(); const f = document.querySelector("#insights .ins-card"); if (f) f.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+        if (e.target.closest("[data-act=share]")) {
+          const txt = this._shareText || "";
+          if (navigator.share) navigator.share({ text: txt }).catch(() => {});
+          else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => this.showToast("toastCopied")).catch(() => {});
+        }
+      });
+      const sel = document.getElementById("selMethod");
+      this.renderMethodSelect();
+      sel.addEventListener("change", () => { this.settings.prayerMethod = sel.value; this.saveSettings(); this.lastSig = null; this.worshipTick(); });
+      document.getElementById("btnLocate").addEventListener("click", () => this.locate());
+      setInterval(() => this.worshipTick(), 1000);
+      this.worshipTick();
+    },
+
+    perfPeriod(range, off = 0) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      let start, total, prevStart, prevLen;
+      if (range === "week") { start = new Date(today); start.setDate(today.getDate() - today.getDay() + off * 7); total = 7; prevStart = new Date(start); prevStart.setDate(start.getDate() - 7); prevLen = 7; }
+      else if (range === "month") { start = new Date(today.getFullYear(), today.getMonth() + off, 1); total = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate(); prevStart = new Date(start.getFullYear(), start.getMonth() - 1, 1); prevLen = new Date(start.getFullYear(), start.getMonth(), 0).getDate(); }
+      else { start = new Date(today.getFullYear() + off, 0, 1); total = Math.round((new Date(start.getFullYear() + 1, 0, 1) - start) / 864e5); prevStart = new Date(start.getFullYear() - 1, 0, 1); prevLen = Math.round((start - prevStart) / 864e5); }
+      const elapsed = off === 0 ? Math.round((today - start) / 864e5) + 1 : total, g = (this.settings.dailyGoal || 4) * 3600;
+      const agg = (st, n) => {
+        const o = { focus: 0, sess: 0, goal: 0, active: 0, ss: 0, days: [], n };
+        for (let i = 0; i < n; i++) { const d = new Date(st); d.setDate(st.getDate() + i); const x = this.dayInfo(this.keyOf(d)); o.days.push({ d, x }); o.focus += x.secs; o.sess += x.sess; if (x.secs >= g) o.goal++; if (x.secs > 0) o.active++; o.ss += x.score; }
+        o.avg = n ? Math.round(o.ss / n) : 0; return o;
+      };
+      return { start, total, elapsed, off, cur: agg(start, elapsed), prev: agg(prevStart, Math.min(elapsed, prevLen)) };
+    },
+
+    renderInsights() {
+      const box = document.getElementById("insights");
+      if (!box) return;
+      const isAr = this.settings.lang === "ar", L = (a, e) => isAr ? a : e, loc = isAr ? "ar-EG-u-nu-latn" : "en-US";
+      const goalS = (this.settings.dailyGoal || 4) * 3600, fmt = s => this.formatFocusDuration(s / 3600), range = this.perfRange || "week";
+      const bars = (arr, labels, max, hi, ti) => `<div class="bars">${arr.map((v, i) => `<div class="bar-col${i === hi ? " hl" : ""}${i === ti ? " tdy" : ""}"><div class="bar" style="height:${v === null ? 2 : max ? Math.max(v / max * 100, v > 0 ? 6 : 2) : 2}%${v === null ? ";opacity:.25" : ""}"></div><span>${esc(labels[i])}</span></div>`).join("")}</div>`;
+      const rates = (list, n) => list.map(([nm, c]) => { const q = n ? Math.round(c / n * 100) : 0; return `<div class="rate"><span>${esc(nm)}</span><div class="rate-bar"><i style="width:${q}%"></i></div><b>${q}%</b></div>`; }).join("");
+      const kpi = (v, l) => `<div class="stat-card"><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div>`;
+      const head = t => `<div class="section-heading">${t}</div>`;
+      const wdS = isAr ? ["أحد", "إثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const wdL = isAr ? ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"] : ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const mS = isAr ? ["ينا", "فبر", "مار", "أبر", "ماي", "يون", "يول", "أغس", "سبت", "أكت", "نوف", "ديس"] : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const tdy = new Date(); tdy.setHours(0, 0, 0, 0);
+      const tInfo = this.dayInfo(this.keyOf(tdy));
+
+      // ===== calendar performance (week starts Sunday) =====
+      const off = this.perfOff || 0, P = this.perfPeriod(range, off), c = P.cur, pv = P.prev;
+      const trend = pv.focus > 0 ? Math.round((c.focus - pv.focus) / pv.focus * 100) : null, dpts = c.avg - pv.avg;
+      let arr = [], labels = [], ti = off === 0 ? P.elapsed - 1 : -1;
+      if (range === "year") { const m = Array(12).fill(0); c.days.forEach(o => { m[o.d.getMonth()] += o.x.secs / 60; }); ti = off === 0 ? tdy.getMonth() : -1; arr = m.map((v, i) => off === 0 && i > tdy.getMonth() ? null : v); labels = mS; }
+      else for (let i = 0; i < P.total; i++) { arr.push(c.days[i] ? c.days[i].x.secs / 60 : null); labels.push(range === "week" ? wdS[i] : ((i + 1) % 5 === 0 || i === 0 ? String(i + 1) : "")); }
+      const mx = Math.max(0, ...arr.filter(v => v !== null)), bi = mx > 0 ? arr.indexOf(mx) : -1;
+      const rg0 = d => d.toLocaleDateString(loc, { day: "numeric", month: "short" }), endW = new Date(P.start); endW.setDate(P.start.getDate() + P.total - 1);
+      const titles = { week: off === 0 ? L("هذا الأسبوع", "This week") : off === -1 ? L("الأسبوع الماضي", "Last week") : `${rg0(P.start)} – ${rg0(endW)}`, month: P.start.toLocaleDateString(loc, { month: "long", year: "numeric" }), year: L("عام ", "Year ") + P.start.getFullYear() };
+      const cmp = off === 0 ? { week: L("الأسبوع الماضي", "last week"), month: L("الشهر الماضي", "last month"), year: L("العام الماضي", "last year") }[range] : { week: L("الأسبوع السابق", "the previous week"), month: L("الشهر السابق", "the previous month"), year: L("العام السابق", "the previous year") }[range];
+      const unit = { week: L("الأسبوع", "week"), month: L("الشهر", "month"), year: L("العام", "year") }[range];
+      const target = goalS * P.total, pct = Math.min(100, Math.round(c.focus / target * 100)), left = P.total - P.elapsed + 1, need = Math.max(0, target - c.focus);
+      const daysTxt = left === 1 ? L("اليوم الأخير", "the last day") : L(`${left} أيام متبقية`, `${left} days left`);
+      let note = off < 0 ? (c.focus >= target ? L(`{trophy} حققت هدف ${unit} كاملًا.`, `{trophy} You fully reached your ${unit} goal.`) : L(`{target} حققت ${pct}% من هدف ${unit} (${fmt(c.focus)} من ${fmt(target)}).`, `{target} You reached ${pct}% of your ${unit} goal (${fmt(c.focus)} of ${fmt(target)}).`)) : c.focus >= target ? L(`{trophy} حققت هدف ${unit}! أنت تتفوق على نفسك.`, `{trophy} You hit your ${unit} goal! Outstanding.`)
+        : L(`{target} باقي ${fmt(need)} على هدف ${unit} — حوالي ${Math.ceil(need / 60 / left)} دقيقة يوميًا (${daysTxt}).`, `{target} ${fmt(need)} left for your ${unit} goal — about ${Math.ceil(need / 60 / left)} min/day (${daysTxt}).`);
+      if (off === 0 && range === "month" && P.elapsed >= 3 && c.focus < target) note += L(` بهذا المعدل ستنهي الشهر بحوالي ${fmt(c.focus / P.elapsed * P.total)}.`, ` At this pace you'll end the month with ~${fmt(c.focus / P.elapsed * P.total)}.`);
+      const bestDay = c.days.reduce((a, o) => o.x.secs > (a ? a.x.secs : 0) ? o.x.secs > 0 ? { ...o, secs: o.x.secs } : a : a, null);
+      const bestTxt = bestDay ? bestDay.d.toLocaleDateString(loc, { weekday: "short", day: "numeric", month: "short" }) : "—";
+      this._shareText = L(`أدائي في تطبيق تركيز — ${titles[range]}\n- ${fmt(c.focus)} تركيز\n- ${c.goal} أيام حققت فيها هدفي\n- مؤشر الإنجاز ${c.avg}/100`, `My Focus app performance — ${titles[range]}\n- ${fmt(c.focus)} focused\n- ${c.goal} goal days\n- Achievement score ${c.avg}/100`);
+      const rh = this.data.heatmap || {}, rk = Object.keys(rh).filter(k => rh[k] > 0).sort();
+      const wkStart = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - x.getDay()); return x; };
+      const wkM = {}, moM = {}, yrM = {};
+      let bestD = null;
+      rk.forEach(k => { const v = rh[k], w = this.keyOf(wkStart(new Date(k + "T00:00:00"))), mk = k.slice(0, 7), yk = k.slice(0, 4); wkM[w] = (wkM[w] || 0) + v; moM[mk] = (moM[mk] || 0) + v; yrM[yk] = (yrM[yk] || 0) + v; if (!bestD || v > bestD.v) bestD = { k, v }; });
+      const topOf = o => Object.entries(o).sort((a, b) => b[1] - a[1])[0], curWk = wkStart(tdy);
+      const bw = topOf(wkM), bm = topOf(moM), by = Object.keys(yrM).length > 1 ? topOf(yrM) : null, recRows = [];
+      const recRow = (icon, label, secs, sub, jump) => `<${jump ? `button type="button" data-pjump="${jump}"` : "div"} class="rec">${ic(icon)}<span class="rec-info"><b>${label}</b><small>${esc(sub)}</small></span><span class="rec-val">${fmt(secs)}</span></${jump ? "button" : "div"}>`;
+      if (bw) { const sd = new Date(bw[0] + "T00:00:00"), ed = new Date(sd); ed.setDate(sd.getDate() + 6); recRows.push(recRow("calendar", L("أعلى أسبوع", "Best week"), bw[1], `${rg0(sd)} – ${rg0(ed)}`, "week:" + Math.round((sd - curWk) / (7 * 864e5)))); }
+      if (bm) { const [yy, mm] = bm[0].split("-").map(Number); recRows.push(recRow("trophy", L("أعلى شهر", "Best month"), bm[1], new Date(yy, mm - 1, 1).toLocaleDateString(loc, { month: "long", year: "numeric" }), "month:" + ((yy * 12 + mm - 1) - (tdy.getFullYear() * 12 + tdy.getMonth())))); }
+      if (by) recRows.push(recRow("star", L("أعلى عام", "Best year"), by[1], L("عام ", "Year ") + by[0], "year:" + (Number(by[0]) - tdy.getFullYear())));
+      if (bestD) { const bd = new Date(bestD.k + "T00:00:00"); recRows.push(recRow("bolt", L("أفضل يوم", "Best day"), bestD.v, bd.toLocaleDateString(loc, { weekday: "long", day: "numeric", month: "long" }), "week:" + Math.round((wkStart(bd) - curWk) / (7 * 864e5)))); }
+      const recCard = `<div class="ins-card"><h4>${L("أرقامك القياسية", "Your records")}</h4>${recRows.length ? recRows.join("") : `<div class="perf-small">${L("ستظهر أرقامك القياسية بعد أول جلسة تركيز.", "Your records will appear after your first focus session.")}</div>`}</div>`;
+      const isBest = range === "week" ? !!bw && Object.keys(wkM).length > 1 && this.keyOf(P.start) === bw[0] : range === "month" ? !!bm && Object.keys(moM).length > 1 && this.keyOf(P.start).slice(0, 7) === bm[0] : !!by && String(P.start.getFullYear()) === by[0];
+      const minK = [...Object.keys(this.data.heatmap || {}), ...Object.keys(this.data.habits || {}), ...Object.keys(this.data.worship || {})].sort()[0];
+      const startOf = d => range === "week" ? wkStart(d) : range === "month" ? new Date(d.getFullYear(), d.getMonth(), 1) : new Date(d.getFullYear(), 0, 1);
+      const canPrev = !!minK && P.start.getTime() > startOf(new Date(minK + "T00:00:00")).getTime();
+      const sub = range === "week" ? (off >= -1 ? `${rg0(P.start)} – ${rg0(endW)}` : L(`قبل ${-off} أسابيع`, `${-off} weeks ago`)) : off === 0 ? L(`حتى اليوم (${P.elapsed} من ${P.total} يوم)`, `So far (${P.elapsed} of ${P.total} days)`) : L(`${P.total} يوم`, `${P.total} days`);
+      const navHtml = `<div class="perf-nav"><button type="button" class="pn" data-pnav="-1" ${canPrev ? "" : "disabled"} aria-label="${L("السابق", "Previous")}">${ic("chev_l")}</button>
+          <div class="perf-nav-mid"><div class="perf-title">${esc(titles[range])}${isBest ? `<span class="perf-tag">${ic("trophy")}${L("الأعلى لديك", "Your best")}</span>` : ""}</div><div class="perf-small">${esc(sub)}</div></div>
+          <button type="button" class="pn" data-pnav="1" ${off < 0 ? "" : "disabled"} aria-label="${L("التالي", "Next")}">${ic("chev_r")}</button></div>${off < 0 ? `<button type="button" class="perf-cur" data-pnav="0">${L("العودة للحالي", "Back to current")}</button>` : ""}`;
+      const trendHtml = trend === null ? "" : ` <small dir="ltr" class="${trend >= 0 ? "trend-up" : "trend-down"}">${ic(trend >= 0 ? "up" : "down")}${Math.abs(trend)}%</small>`;
+      const perf = `<div class="ins-card"><div class="perf-head"><h4>${L("أداؤك", "Your performance")}</h4>
+          <div class="segment-control">${[["week", L("الأسبوع", "Week")], ["month", L("الشهر", "Month")], ["year", L("السنة", "Year")]].map(([k, n]) => `<button type="button" data-perf="${k}" class="${k === range ? "active" : ""}">${n}</button>`).join("")}</div></div>
+        ${navHtml}
+        <div class="perf-main"><div class="score" style="--p:${c.avg}"><b>${c.avg}</b></div>
+          <div class="perf-side">
+            <div class="perf-delta ${dpts >= 0 ? "trend-up" : "trend-down"}">${ic(dpts >= 0 ? "up" : "down")}${Math.abs(dpts)} ${L("نقطة عن " + cmp, "pts vs " + cmp)}</div>
+            <div class="perf-meter"><i style="width:${pct}%"></i></div>
+            <div class="perf-small">${L("هدف " + unit, "Goal")}: ${fmt(c.focus)} / ${fmt(target)} (${pct}%)</div></div></div>
+        <div class="stats-grid perf-kpis">
+          ${kpi(fmt(c.focus) + trendHtml, L("وقت التركيز", "Focus time"))}${kpi(c.sess, L("الجلسات", "Sessions"))}
+          ${kpi(`${c.goal}/${P.elapsed}`, L("أيام تحقيق الهدف", "Goal days"))}${kpi(`${c.active}/${P.elapsed}`, L("أيام نشطة", "Active days"))}
+          ${kpi(c.active ? fmt(c.focus / c.active) : "—", L("متوسط اليوم النشط", "Avg active day"))}${kpi(esc(bestTxt), L("أفضل يوم", "Best day"))}</div>
+        ${bars(arr, labels, mx, bi, ti)}
+        <div class="perf-note">${rich(note)}</div>
+        <button type="button" class="perf-share" data-act="share">${ic("share")}${L("شارك أداءك", "Share performance")}</button></div>`;
+
+      // ===== level, streak, badges =====
+      const st = this.data.stats || {}, totalH = (st.totalFocusSeconds || 0) / 3600, hm = this.data.heatmap || {};
+      const TH = [0, 2, 5, 10, 20, 40, 80, 150, 300, 600, 1000];
+      const NM = isAr ? ["بادئ", "مستكشف", "مثابر", "متقد", "محترف", "خبير", "بارع", "أستاذ", "أسطورة", "عملاق", "خارق"] : ["Rookie", "Explorer", "Persistent", "Driven", "Pro", "Expert", "Master", "Sage", "Legend", "Titan", "Superhuman"];
+      let lv = 0; TH.forEach((t, i) => { if (totalH >= t) lv = i; });
+      const nextT = TH[lv + 1], lp = nextT ? Math.round((totalH - TH[lv]) / (nextT - TH[lv]) * 100) : 100;
+      const keys = Object.keys(hm).filter(k => hm[k] > 0).sort();
+      let longest = 0, run = 0, pd = null, goalAll = 0;
+      keys.forEach(k => { const d = new Date(k + "T00:00:00"); run = pd && Math.round((d - pd) / 864e5) === 1 ? run + 1 : 1; longest = Math.max(longest, run); pd = d; if (hm[k] >= goalS) goalAll++; });
+      let curS = 0; for (let i = hm[this.keyOf(tdy)] > 0 ? 0 : 1; i < 4000; i++) { const d = new Date(tdy); d.setDate(tdy.getDate() - i); if ((hm[this.keyOf(d)] || 0) > 0) curS++; else break; }
+      const habits = this.data.customHabits || [], ws = this.data.worship || {}, hb = this.data.habits || {};
+      const hrs = this.data.hourly || {};
+      const lvlCard = `<div class="ins-card"><div class="lvl-top"><div class="lvl-badge">${lv + 1}</div><div class="lvl-info"><div class="lvl-name">${esc(NM[lv])}</div>
+          <div class="lvl-sub">${fmt(st.totalFocusSeconds || 0)} ${nextT ? L(`· باقي ${Math.max(0, Math.ceil((nextT - totalH) * 10) / 10)} ساعة للمستوى التالي «${NM[lv + 1]}»`, `· ${Math.max(0, Math.ceil((nextT - totalH) * 10) / 10)}h to next level "${NM[lv + 1]}"`) : L("· أعلى مستوى!", "· Max level!")}</div></div>
+          <div class="streak-box">${ic("fire")}${curS}<small>${L("سلسلة", "streak")}</small></div></div>
+        <div class="perf-meter"><i style="width:${lp}%"></i></div>
+        <div class="perf-small" style="margin-top:8px">${L(`أطول سلسلة: ${longest} يوم · أيام تحقيق الهدف: ${goalAll}`, `Longest streak: ${longest} days · Goal days: ${goalAll}`)}</div></div>`;
+
+
+      // ===== rolling analysis (stats filter) =====
+      const days = P.cur.n;
+      const wd = Array(7).fill(0), wdN = Array(7).fill(0), pr = {}, hr = {}, ad = {};
+      WORSHIP_ITEMS.prayers.forEach(x => pr[x.id] = 0); WORSHIP_ITEMS.adhkar.forEach(x => ad[x.id] = 0); habits.forEach(h => hr[h.id] = 0);
+      let tot = 0, prev = P.prev.focus, active = 0, hit = 0, rn = 0, lg = 0, fS = 0, hS = 0, wS = 0, sess = 0;
+      P.cur.days.forEach(({ d: dt, x }) => {
+        const key = this.keyOf(dt);
+        wd[dt.getDay()] += x.secs; wdN[dt.getDay()]++; tot += x.secs; fS += x.fp; hS += x.hp; wS += x.wp; sess += x.sess;
+        if (x.secs > 0) { active++; rn++; lg = Math.max(lg, rn); } else rn = 0;
+        if (x.secs >= goalS) hit++;
+        const hs = hb[key] || {}; habits.forEach(h => { if (hs[h.id]) hr[h.id]++; });
+        const w = ws[key] || {}; WORSHIP_ITEMS.prayers.forEach(pz => { if (w[pz.id]) pr[pz.id]++; }); WORSHIP_ITEMS.adhkar.forEach(a => { if (w[a.id]) ad[a.id]++; });
+      });
+      const fP = fS / days, hP = hS / days, wP = wS / days, score = Math.round((fP * 0.4 + hP * 0.2 + wP * 0.4) * 100);
+      const rt = prev > 0 ? Math.round((tot - prev) / prev * 100) : null;
+      let pk = -1, pv2 = 0; for (let h = 0; h < 24; h++) if ((hrs["h" + h] || 0) > pv2) { pv2 = hrs["h" + h]; pk = h; }
+      const hl = h => `${h % 12 || 12} ${h < 12 ? L("ص", "AM") : L("م", "PM")}`;
+      const wdAvg = wd.map((v, i) => wdN[i] ? v / wdN[i] : 0), wMax = Math.max(...wdAvg), wBest = wMax > 0 ? wdAvg.indexOf(wMax) : -1;
+      const wdPos = wdAvg.map((v, i) => [v, i]).filter(a => wdN[a[1]] > 0).sort((a, b) => a[0] - b[0]), wWorst = wdPos.length > 1 ? wdPos[0][1] : -1;
+      const hv = Array.from({ length: 24 }, (_, h) => hrs["h" + h] || 0), hMax = Math.max(...hv), hTot = hv.reduce((a, b) => a + b, 0), morning = hv.slice(0, 12).reduce((a, b) => a + b, 0);
+      const wkEnd = (wd[5] + wd[6]) / Math.max(1, wdN[5] + wdN[6]), wkDay = (wd[0] + wd[1] + wd[2] + wd[3] + wd[4]) / Math.max(1, wdN[0] + wdN[1] + wdN[2] + wdN[3] + wdN[4]);
+
+      // ===== smart insights =====
+      const T = [];
+      if (off === 0 && curS > 0 && tInfo.secs === 0) T.push(L(`{fire} سلسلتك ${curS} يوم — جلسة واحدة اليوم تحافظ عليها.`, `{fire} You're on a ${curS}-day streak — one session today keeps it alive.`));
+      if (off === 0 && tInfo.secs >= goalS) T.push(L("{trophy} حققت هدف اليوم! أي وقت إضافي هو مكسب.", "{trophy} You hit today's goal! Any extra time is a bonus."));
+      else if (off === 0 && tInfo.secs > 0) T.push(L(`{hourglass} باقي ${Math.ceil((goalS - tInfo.secs) / 60)} دقيقة على هدف اليوم.`, `{hourglass} ${Math.ceil((goalS - tInfo.secs) / 60)} min left for today's goal.`));
+      if (off === 0 && trend !== null && range === "week") T.push(trend >= 0 ? L(`{flag} أسبوعك حتى الآن أفضل من الأسبوع الماضي بنسبة ${trend}%.`, `{flag} This week is ${trend}% ahead of last week so far.`) : L(`{flag} أسبوعك حتى الآن أقل من الأسبوع الماضي بنسبة ${-trend}%، ما زال الوقت متاحًا.`, `{flag} This week is ${-trend}% behind last week so far — there's still time.`));
+      if (wBest >= 0) T.push(L(`{star} أفضل أيامك إنتاجية: ${wdL[wBest]} (متوسط ${fmt(wMax)}).`, `{star} Most productive weekday: ${wdL[wBest]} (avg ${fmt(wMax)}).`));
+      if (wWorst >= 0 && wWorst !== wBest) T.push(L(`{compass} أضعف أيامك: ${wdL[wWorst]} — جرّب جدولة جلسة ثابتة فيه.`, `{compass} Weakest weekday: ${wdL[wWorst]} — try scheduling a fixed session.`));
+      if (pk >= 0) T.push(L(`{clock} ذروة تركيزك حوالي ${hl(pk)} — احجز فيها أصعب مهامك.`, `{clock} Your focus peaks around ${hl(pk)} — schedule your hardest work then.`));
+      if (hTot > 3600) T.push(morning / hTot >= 0.6 ? L(`{sun} ${Math.round(morning / hTot * 100)}% من تركيزك قبل الظهر — أنت شخص صباحي.`, `{sun} ${Math.round(morning / hTot * 100)}% of your focus is before noon — you're a morning person.`) : morning / hTot <= 0.35 ? L(`{moon} معظم تركيزك بعد الظهر — خصّص المساء للعمل العميق.`, `{moon} Most of your focus is after noon — protect your evenings for deep work.`) : L("{balance} تركيزك متوازن بين الصباح والمساء.", "{balance} Your focus is balanced between morning and evening."));
+      if (sess >= 3) { const av = Math.round(tot / sess / 60); T.push(av < 20 ? L(`{timer} متوسط جلستك ${av} دقيقة — حاول إكمال الجلسة الكاملة دون مقاطعة.`, `{timer} Your average session is ${av} min — try finishing full sessions uninterrupted.`) : L(`{timer} متوسط جلستك ${av} دقيقة — ثبات ممتاز.`, `{timer} Your average session is ${av} min — solid consistency.`)); }
+      T.push(active / days < 0.5 ? L("{calendar} الانتظام أهم من الكثافة: 25 دقيقة يوميًا أفضل من 3 ساعات مرة في الأسبوع.", "{calendar} Consistency beats intensity: 25 min daily beats 3 hours once a week.") : active / days >= 0.85 ? L(`{thumb} انتظام رائع: ${Math.round(active / days * 100)}% من الأيام نشطة.`, `{thumb} Great consistency: ${Math.round(active / days * 100)}% of days active.`) : L(`{calendar} كنت نشطًا في ${active} من ${days} يومًا، حاول رفعها.`, `{calendar} You were active ${active} of ${days} days — aim higher.`));
+      if (wkDay > 0 && wkEnd < wkDay * 0.5) T.push(L("{pause} تركيزك ينخفض كثيرًا في الجمعة والسبت — خصّص جلسة خفيفة فيهما.", "{pause} Your focus drops sharply on Fri/Sat — plan one light session."));
+      if (hit > 0) T.push(L(`{check} حققت هدفك اليومي في ${hit} من ${days} يومًا.`, `{check} You met your daily goal on ${hit} of ${days} days.`));
+      const prs = WORSHIP_ITEMS.prayers.map(x => [x, pr[x.id]]).sort((a, b) => a[1] - b[1]);
+      if (prs[4][1] > 0) T.push(L(`{moon} أقل صلاة التزامًا: ${prs[0][0].ar} (${Math.round(prs[0][1] / days * 100)}%)، وأعلاها ${prs[4][0].ar}.`, `{moon} Least consistent prayer: ${prs[0][0].en} (${Math.round(prs[0][1] / days * 100)}%); strongest: ${prs[4][0].en}.`));
+      const ads = WORSHIP_ITEMS.adhkar.map(x => [x, ad[x.id]]).sort((a, b) => a[1] - b[1]);
+      if (ads.length && ads[ads.length - 1][1] > 0 && ads[0][1] / days < 0.6) T.push(L(`{sparkle} أقل أذكارك التزامًا: ${ads[0][0].ar}.`, `{sparkle} Your least consistent adhkar: ${ads[0][0].en}.`));
+      if (habits.length) { const hs2 = habits.map(h => [h, hr[h.id]]).sort((a, b) => a[1] - b[1]); if (hs2[habits.length - 1][1] > 0) T.push(L(`{leaf} أقوى عاداتك: ${hs2[habits.length - 1][0].titleAr || hs2[habits.length - 1][0].title}، وأضعفها: ${hs2[0][0].titleAr || hs2[0][0].title}.`, `{leaf} Strongest habit: ${hs2[habits.length - 1][0].titleEn || hs2[habits.length - 1][0].title}; weakest: ${hs2[0][0].titleEn || hs2[0][0].title}.`)); }
+      if (nextT) T.push(L(`{bolt} باقي ${Math.max(0, Math.ceil((nextT - totalH) * 10) / 10)} ساعة وتصل لمستوى «${NM[lv + 1]}».`, `{bolt} ${Math.max(0, Math.ceil((nextT - totalH) * 10) / 10)}h to reach "${NM[lv + 1]}".`));
+      if (T.length < 2 || totalH === 0) T.unshift(L("ابدأ جلسة تركيز واحدة وستظهر هنا تحليلات مخصصة لك.", "Start a focus session and personalized insights will appear here."));
+      const tips = T.slice(0, 10);
+
+      const analysis = `<div class="ins-hero"><div class="score" style="--p:${score}"><b>${score}</b></div><div class="ins-parts"><div><strong>${L("مؤشر الإنجاز", "Achievement score")}</strong></div>
+          <div>${L("التركيز", "Focus")}: ${Math.round(fP * 100)}% · ${L("العادات", "Habits")}: ${Math.round(hP * 100)}% · ${L("العبادات", "Worship")}: ${Math.round(wP * 100)}%</div></div></div>
+        <div class="stats-grid">${kpi(fmt(tot) + (rt === null ? "" : ` <small dir="ltr" class="${rt >= 0 ? "trend-up" : "trend-down"}">${ic(rt >= 0 ? "up" : "down")}${Math.abs(rt)}%</small>`), L("تركيز الفترة", "Period focus"))}${kpi(sess, L("جلسات الفترة", "Period sessions"))}${kpi(`${hit}/${days}`, L("أيام تحقيق الهدف", "Goal days"))}${kpi(Math.round(active / days * 100) + "%", L("الانتظام", "Consistency"))}${kpi(lg, L("أطول سلسلة بالفترة", "Longest streak"))}${kpi(pk >= 0 ? hl(pk) : "—", L("ذروة التركيز", "Peak hour"))}</div>
+        <div class="ins-card"><h4>${L("متوسط التركيز حسب اليوم", "Average focus by weekday")}</h4>${bars(wdAvg, wdS, wMax, wBest, -1)}</div>
+        <div class="ins-card"><h4>${L("توزيع التركيز على ساعات اليوم (الإجمالي)", "Focus by hour of day (all time)")}</h4>${bars(hv, hv.map((_, h) => h % 6 === 0 ? String(h) : ""), hMax, pk, -1)}</div>
+        ${habits.length ? `<div class="ins-card"><h4>${L("الالتزام بالعادات", "Habit completion")}</h4>${rates(habits.map(h => [isAr ? (h.titleAr || h.title) : (h.titleEn || h.title), hr[h.id]]), days)}</div>` : ""}
+        <div class="ins-card"><h4>${L("الالتزام بالصلوات", "Prayer consistency")}</h4>${rates(WORSHIP_ITEMS.prayers.map(x => [isAr ? x.ar : x.en, pr[x.id]]), days)}</div>`;
+      box.innerHTML = perf + recCard + lvlCard + `<div class="ins-card"><h4>${L("ملاحظات ذكية", "Smart insights")}</h4><ul class="ins-tips">${tips.map(t => `<li>${rich(t)}</li>`).join("")}</ul></div>`
+        + head(L("تحليل معمّق · ", "Deep analysis · ") + esc(titles[range])) + analysis;
+    },
+
+    toggleHabit(id) {
+      const activeDate = this.getActiveDateStr();
+      if (!this.data.habits[activeDate]) this.data.habits[activeDate] = {};
+      this.data.habits[activeDate][id] = !this.data.habits[activeDate][id];
+      if (this.data.habits[activeDate][id]) {
+        this.haptic(15);
+        audio.playSuccess();
+        confetti.fire();
+      }
+      this.calculateGlobalStreak();
+      this.saveData();
+      this.renderHabits();
+      this.showToast("toastHabitDone");
+    },
+
+    toggleWorship(id) {
+      if (this.worshipLock(id)) { this.showToast("toastLocked"); return; }
+      const activeDate = this.getActiveDateStr();
+      if (!this.data.worship) this.data.worship = {};
+      if (!this.data.worship[activeDate]) this.data.worship[activeDate] = {};
+      this.data.worship[activeDate][id] = !this.data.worship[activeDate][id];
+      if (this.data.worship[activeDate][id]) {
+        this.haptic(15);
+        audio.playSuccess();
+        confetti.fire();
+      }
+      this.calculateGlobalStreak();
+      this.saveData();
+      this.renderWorship();
+      this.showToast("toastHabitDone");
+    },
+
+    renderWorship() {
+      const activeDateStr = this.getActiveDateStr();
+      const state = (this.data.worship && this.data.worship[activeDateStr]) || {};
+      const isAr = this.settings.lang === "ar";
+      
+      const [y, m, d] = activeDateStr.split('-');
+      const isFriday = new Date(y, m - 1, d).getDay() === 5;
+
+      const currentQuran = [...WORSHIP_ITEMS.quran];
+      if (isFriday) {
+        currentQuran.push({
+          id: "kahf",
+          arT: this.t("wsKahf"), arS: this.t("wsKahfDesc"),
+          enT: this.t("wsKahf"), enS: this.t("wsKahfDesc"),
+          icon: `<svg viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>`
+        });
+      }
+
+      const renderGrid = (items, containerId, countId) => {
+        const c = document.getElementById(containerId);
+        c.innerHTML = "";
+        let dCount = 0;
+        items.forEach(item => {
+          const done = !!state[item.id];
+          if(done) dCount++;
+          const card = document.createElement("div");
+          const lock = this.worshipLock(item.id), pt = this.getPrayerTimes(this.activeDateOffset);
+          card.className = `prayer-card ${done ? "done" : ""} ${lock ? "locked" : ""} ${this.activeDateOffset === 0 && this.nextPrayerId === item.id ? "next" : ""}`;
+          card.innerHTML = `<div class="p-icon">${item.icon}</div><div class="p-name">${isAr ? item.ar : item.en}</div>${pt ? `<div class="p-time">${this.fmtTime(pt[item.id])}</div>` : ""}`;
+          card.addEventListener("click", () => this.toggleWorship(item.id));
+          c.appendChild(card);
+        });
+        document.getElementById(countId).textContent = `${dCount}/${items.length}`;
+      };
+
+      const renderList = (items, containerId, countId) => {
+        const c = document.getElementById(containerId);
+        c.innerHTML = "";
+        let dCount = 0;
+        items.forEach(item => {
+          const done = !!state[item.id];
+          if(done) dCount++;
+          const li = document.createElement("div");
+          const lock = this.worshipLock(item.id);
+          li.className = `w-list-item ${done ? "done" : ""} ${lock ? "locked" : ""}`;
+          li.innerHTML = `
+            <div class="w-icon">${item.icon}</div>
+            <div class="w-details">
+              <div class="w-title">${isAr ? (item.arT || item.titleAr) : (item.enT || item.titleEn)}</div>
+              <div class="w-subtitle">${lock ? esc(this.t("opensAt") + " " + this.fmtTime(lock)) : (isAr ? (item.arS || '') : (item.enS || ''))}</div>
+            </div>
+            <button class="checkbox-custom ${done ? "checked" : ""}"></button>
+          `;
+          li.addEventListener("click", () => this.toggleWorship(item.id));
+          c.appendChild(li);
+        });
+        document.getElementById(countId).textContent = `${dCount}/${items.length}`;
+      };
+
+      renderGrid(WORSHIP_ITEMS.prayers, "prayersGrid", "countPrayers");
+      renderList(WORSHIP_ITEMS.adhkar, "adhkarList", "countAdhkar");
+      renderList(currentQuran, "quranList", "countQuran");
+      renderList(WORSHIP_ITEMS.daily, "dailyList", "countDaily");
+      renderList(WORSHIP_ITEMS.sunnah, "sunnahList", "countSunnah");
+      renderList(WORSHIP_ITEMS.night, "nightList", "countNight");
+
+      const wsStats = this.getWorshipDayStats(activeDateStr);
+      document.getElementById("worshipProgressStats").textContent = `${wsStats.percent}%`;
+      document.getElementById("worshipProgressBar").style.width = `${wsStats.percent}%`;
+    },
+
+    renderHabits() {
+      const activeDate = this.getActiveDateStr();
+      const states = this.data.habits[activeDate] || {};
+      const list = document.getElementById("habitsList");
+      list.innerHTML = "";
+      let doneCount = 0;
+      const arr = this.data.customHabits;
+
+      arr.forEach(h => {
+        const isDone = !!states[h.id];
+        if (isDone) doneCount++;
+        const card = document.createElement("div");
+        card.className = `habit-card ${isDone ? "done" : ""}`;
+        
+        let streak = 0;
+        for (let i = 0; i < 30; i++) {
+          let d = DateUtils.getRelativeDateStr(-i + this.activeDateOffset);
+          if (this.data.habits[d] && this.data.habits[d][h.id]) streak++; else if (i>0) break;
+        }
+
+        const title = this.settings.lang === 'ar' ? (h.titleAr || h.title) : (h.titleEn || h.title);
+        card.innerHTML = `
+          <div class="habit-icon">${h.icon}</div>
+          <div class="habit-details">
+            <div class="habit-title">${esc(title)}</div>
+            <div class="habit-streak"><svg viewBox="0 0 24 24"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3.25C14.05 3.07 13.92 2.87 13.71 2.9C11.83 3.19 10 4.29 8.76 5.8C7.11 7.82 6.6 10.69 7.37 13.16C7.45 13.41 7.15 13.62 6.96 13.45C6.44 12.98 6.06 12.38 5.86 11.71C5.78 11.45 5.41 11.41 5.28 11.65C4.21 13.61 4.54 16.14 5.92 17.84C7.39 19.64 9.8 20.62 12.23 20.25C15.4 19.78 17.92 17 18.25 13.82C18.34 12.9 18.09 11.96 17.66 11.2Z"/></svg> ${streak} ${this.t("unitDays")}</div>
+          </div>
+          <button class="checkbox-custom ${isDone ? "checked" : ""}"></button>
+        `;
+        card.addEventListener("click", () => this.toggleHabit(h.id));
+        list.appendChild(card);
+      });
+
+      const totalHabits = arr.length || 1;
+      document.getElementById("habitProgressStats").textContent = `${doneCount}/${arr.length}`;
+      document.getElementById("habitProgressBar").style.width = `${(doneCount / totalHabits) * 100}%`;
+    },
+
+    renderHeatmap() {
+      const grid = document.getElementById("heatmapGrid");
+      if (!grid) return;
+      const isAr = this.settings.lang === "ar", L = (a, e) => isAr ? a : e, loc = isAr ? "ar-EG-u-nu-latn" : "en-US";
+      if (!this.heatMode) { try { this.heatMode = localStorage.getItem("tarkeez_heat") || "all"; } catch (e) { this.heatMode = "all"; } }
+      const chips = document.getElementById("heatModes");
+      chips.innerHTML = [["all", L("الكل", "All")], ["focus", L("التركيز", "Focus")], ["habits", L("العادات", "Habits")], ["worship", L("العبادات", "Worship")]]
+        .map(([k, n]) => `<button type="button" data-hm="${k}" class="${k === this.heatMode ? "active" : ""}">${n}</button>`).join("");
+      chips.querySelectorAll("button").forEach(b => b.addEventListener("click", () => { this.heatMode = b.dataset.hm; try { localStorage.setItem("tarkeez_heat", this.heatMode); } catch (e) {} this.renderHeatmap(); }));
+      const summary = document.getElementById("heatmapSummary"), detail = document.getElementById("heatmapDetail");
+      grid.innerHTML = "";
+      const weeks = 12, today = new Date(); today.setHours(0, 0, 0, 0);
+      const thisSun = new Date(today); thisSun.setDate(today.getDate() - today.getDay());
+      const start = new Date(thisSun); start.setDate(thisSun.getDate() - (weeks - 1) * 7);
+      const todayKey = this.keyOf(today);
+      let act = 0, days = 0, sum = 0;
+      for (let d = 0; d < 7; d++) for (let w = 0; w < weeks; w++) {
+        const day = new Date(start); day.setDate(start.getDate() + w * 7 + d);
+        const cell = document.createElement("div");
+        cell.className = "heatmap-cell";
+        if (day > today) { cell.style.visibility = "hidden"; grid.appendChild(cell); continue; }
+        const key = this.keyOf(day), x = this.dayInfo(key);
+        const v = this.heatMode === "focus" ? x.fp : this.heatMode === "habits" ? x.hp : this.heatMode === "worship" ? x.wp : x.score / 100;
+        cell.dataset.intensity = v <= 0 ? 0 : v >= 0.75 ? 4 : v >= 0.5 ? 3 : v >= 0.25 ? 2 : 1;
+        const label = `${day.toLocaleDateString(loc, { weekday: "long", day: "numeric", month: "long" })} — ${L("تركيز", "Focus")} ${Math.round(x.secs / 60)} ${L("د", "min")} · ${L("عادات", "Habits")} ${x.hd}/${x.ht} · ${L("عبادات", "Worship")} ${Math.round(x.wp * 100)}%`;
+        cell.title = label; cell.setAttribute("aria-label", label);
+        if (key === todayKey) cell.classList.add("today");
+        cell.addEventListener("click", () => { detail.textContent = label; });
+        days++; sum += v; if (v > 0) act++;
+        grid.appendChild(cell);
+      }
+      summary.innerHTML = L(`<strong>${act}</strong> يوم نشط من ${days} · متوسط النشاط <strong>${days ? Math.round(sum / days * 100) : 0}%</strong> (آخر ${weeks} أسبوعًا)`,
+        `<strong>${act}</strong> active days of ${days} · average activity <strong>${days ? Math.round(sum / days * 100) : 0}%</strong> (last ${weeks} weeks)`);
+      detail.textContent = L("اضغط على أي يوم لرؤية التفاصيل", "Tap any day to see details");
+    },
+
+    formatFocusDuration(hoursDecimal) {
+      const totalMinutes = Math.max(0, Math.round(hoursDecimal * 60));
+      const hh = Math.floor(totalMinutes / 60);
+      const mm = totalMinutes % 60;
+      if (hh > 0 && mm > 0) return `${hh} ${this.t('unitHrs')} ${mm} ${this.t('unitMin')}`;
+      if (hh > 0) return `${hh} ${this.t('unitHrs')}`;
+      return `${mm} ${this.t('unitMin')}`;
+    },
+
+    renderStats() {
+      this.calculateGlobalStreak();
+      document.getElementById("statTotalFocus").textContent = this.formatFocusDuration(this.data.stats.totalFocusSeconds / 3600);
+      document.getElementById("statSessions").textContent = this.data.stats.sessionsCompleted;
+      document.getElementById("statStreak").textContent = this.data.stats.currentStreak;
+
+      document.querySelectorAll("#statsFilterSeg button").forEach(b => {
+        b.classList.toggle("active", b.dataset.filter === this.settings.statsFilter);
+      });
+
+      const chart = document.getElementById("focusChart");
+      chart.innerHTML = "";
+      
+      let chartData = [];
+      let maxVal = 0.1;
+      const today = new Date();
+      const locale = this.settings.lang === 'ar' ? 'ar-EG' : 'en-US';
+
+      let sumPercent = 0, sumPrayers = 0, sumSunnah = 0, sumAdhkar = 0, sumNight = 0, sumQuran = 0, bestWorshipPercent = 0, totalDaysInPeriod = 0;
+
+      if (this.settings.statsFilter === 'year') {
+        document.getElementById("statsPeriodLabel").textContent = today.getFullYear().toString();
+        for(let m = 1; m <= 12; m++) {
+          let mVal = 0;
+          let sumPercentMonth = 0, daysCountMonth = 0;
+          const dInM = new Date(today.getFullYear(), m, 0).getDate();
+          for(let i = 1; i <= dInM; i++) {
+             const d = `${today.getFullYear()}-${String(m).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+             mVal += (this.data.heatmap[d] || 0);
+             
+             if(new Date(d) <= today) {
+               const ws = this.getWorshipDayStats(d);
+               sumPercent += ws.percent;
+               sumPrayers += ws.prayers;
+               sumSunnah += ws.sunnah;
+               sumAdhkar += ws.adhkar;
+               sumNight += ws.night;
+               sumQuran += ws.quran;
+               if(ws.percent > bestWorshipPercent) bestWorshipPercent = ws.percent;
+               totalDaysInPeriod++;
+               sumPercentMonth += ws.percent;
+               daysCountMonth++;
+             }
+          }
+          const val = Number((mVal / 3600).toFixed(1));
+          if(val > maxVal) maxVal = val;
+          const lbl = new Date(today.getFullYear(), m-1, 1).toLocaleDateString(locale, { month: 'short' });
+          const wPercent = daysCountMonth > 0 ? Math.round(sumPercentMonth / daysCountMonth) : 0;
+          chartData.push({ label: lbl, val: val, wPercent: wPercent });
+        }
+      } else if (this.settings.statsFilter === 'month') {
+        document.getElementById("statsPeriodLabel").textContent = today.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+        const dInM = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+        for(let i = 1; i <= dInM; i++) {
+          const d = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+          const val = Number(((this.data.heatmap[d] || 0) / 3600).toFixed(1));
+          if(val > maxVal) maxVal = val;
+          let dayPercent = 0;
+
+          if(new Date(d) <= today) {
+             const ws = this.getWorshipDayStats(d);
+             sumPercent += ws.percent;
+             sumPrayers += ws.prayers;
+             sumSunnah += ws.sunnah;
+             sumAdhkar += ws.adhkar;
+             sumNight += ws.night;
+             sumQuran += ws.quran;
+             if(ws.percent > bestWorshipPercent) bestWorshipPercent = ws.percent;
+             totalDaysInPeriod++;
+             dayPercent = ws.percent;
+          }
+          chartData.push({ label: (i%5===0 || i===1) ? i.toString() : "", val: val, wPercent: dayPercent });
+        }
+      } else {
+        document.getElementById("statsPeriodLabel").textContent = this.settings.lang === 'ar' ? "آخر 7 أيام" : "Last 7 Days";
+        for(let i = 6; i >= 0; i--) {
+          const d = DateUtils.getRelativeDateStr(-i);
+          const val = Number(((this.data.heatmap[d] || 0) / 3600).toFixed(1));
+          if(val > maxVal) maxVal = val;
+          const dt = new Date(d);
+          const lbl = this.settings.lang === 'ar' ? ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][dt.getDay()] : ['Su','Mo','Tu','We','Th','Fr','Sa'][dt.getDay()];
+
+          const ws = this.getWorshipDayStats(d);
+          sumPercent += ws.percent;
+          sumPrayers += ws.prayers;
+          sumSunnah += ws.sunnah;
+          sumAdhkar += ws.adhkar;
+          sumNight += ws.night;
+          sumQuran += ws.quran;
+          if(ws.percent > bestWorshipPercent) bestWorshipPercent = ws.percent;
+          totalDaysInPeriod++;
+          chartData.push({ label: lbl, val: val, wPercent: ws.percent });
+        }
+      }
+      
+      const focusSum = chartData.reduce((s, d) => s + d.val, 0);
+      const bestVal = chartData.length ? Math.max(...chartData.map(d => d.val)) : 0;
+      const activeCount = chartData.filter(d => d.val > 0).length;
+      const avgPerDay = totalDaysInPeriod > 0 ? focusSum / totalDaysInPeriod : 0;
+      document.getElementById("statAvgPerDay").textContent = this.formatFocusDuration(avgPerDay);
+      document.getElementById("statBestDay").textContent = this.formatFocusDuration(bestVal);
+      document.getElementById("statActiveDays").textContent = `${activeCount}/${totalDaysInPeriod}`;
+
+      const width = 500; const height = 200;
+      const padding = 30; 
+      const numBars = chartData.length;
+      let barW = numBars > 12 ? 8 : (numBars > 7 ? 20 : 40);
+      const chartW = width - (padding * 2);
+      const chartH = height - (padding * 2);
+      const gap = numBars > 1 ? (chartW - (numBars * barW)) / (numBars - 1) : 0;
+
+      chartData.forEach((d, i) => {
+        const x = padding + (i * (barW + gap));
+        const barH = (d.val / maxVal) * chartH;
+        const y = height - padding - barH;
+        
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("class", "chart-bar");
+        rect.setAttribute("x", x);
+        rect.setAttribute("y", height - padding);
+        rect.setAttribute("width", barW);
+        rect.setAttribute("height", 0);
+        chart.appendChild(rect);
+        
+        setTimeout(() => {
+          rect.setAttribute("y", y);
+          rect.setAttribute("height", Math.max(2, barH));
+        }, 10 + (i * (300/numBars)));
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("class", "chart-text");
+        text.setAttribute("x", x + (barW / 2));
+        text.setAttribute("y", height - 10);
+        text.textContent = d.label;
+        chart.appendChild(text);
+
+        if(d.val > 0) {
+          const valText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          valText.setAttribute("class", "chart-text");
+          valText.setAttribute("x", x + (barW / 2));
+          valText.setAttribute("y", y - 8);
+          valText.style.opacity = 0;
+          valText.textContent = d.val;
+          chart.appendChild(valText);
+          
+          rect.addEventListener("mouseenter", () => valText.style.opacity = 1);
+          rect.addEventListener("mouseleave", () => valText.style.opacity = 0);
+        }
+      });
+
+      const worshipChart = document.getElementById("worshipChart");
+      if (worshipChart) {
+        worshipChart.innerHTML = "";
+        const wMax = 100;
+        chartData.forEach((d, i) => {
+          const x = padding + (i * (barW + gap));
+          const barH = (Math.max(0, Math.min(100, d.wPercent || 0)) / wMax) * chartH;
+          const y = height - padding - barH;
+
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("class", "chart-bar");
+          rect.setAttribute("x", x);
+          rect.setAttribute("y", height - padding);
+          rect.setAttribute("width", barW);
+          rect.setAttribute("height", 0);
+          worshipChart.appendChild(rect);
+
+          setTimeout(() => {
+            rect.setAttribute("y", y);
+            rect.setAttribute("height", Math.max(2, barH));
+          }, 10 + (i * (300/numBars)));
+
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute("class", "chart-text");
+          text.setAttribute("x", x + (barW / 2));
+          text.setAttribute("y", height - 10);
+          text.textContent = d.label;
+          worshipChart.appendChild(text);
+
+          if(d.wPercent > 0) {
+            const valText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            valText.setAttribute("class", "chart-text");
+            valText.setAttribute("x", x + (barW / 2));
+            valText.setAttribute("y", y - 8);
+            valText.style.opacity = 0;
+            valText.textContent = `${d.wPercent}%`;
+            worshipChart.appendChild(valText);
+
+            rect.addEventListener("mouseenter", () => valText.style.opacity = 1);
+            rect.addEventListener("mouseleave", () => valText.style.opacity = 0);
+          }
+        });
+      }
+
+      let avgPercent = totalDaysInPeriod > 0 ? Math.round(sumPercent / totalDaysInPeriod) : 0;
+      const prayerRate = totalDaysInPeriod > 0 ? Math.round((sumPrayers / (totalDaysInPeriod * WORSHIP_ITEMS.prayers.length)) * 100) : 0;
+      document.getElementById("statWorshipAvg").textContent = `${avgPercent}%`;
+      document.getElementById("statPrayerRate").textContent = `${prayerRate}%`;
+      document.getElementById("statPrayersTotal").textContent = sumPrayers;
+      document.getElementById("statQuranDays").textContent = `${sumQuran}/${totalDaysInPeriod}`;
+      document.getElementById("statSunnahTotal").textContent = sumSunnah;
+      document.getElementById("statNightTotal").textContent = sumNight;
+      document.getElementById("statAdhkarTotal").textContent = sumAdhkar;
+      document.getElementById("statBestWorship").textContent = `${bestWorshipPercent}%`;
+      this.renderInsights();
+    },
+
+    renderHabitSettings() {
+      const container = document.getElementById("habitsEditList");
+      container.innerHTML = "";
+      this.data.customHabits.forEach((h, index) => {
+        const row = document.createElement("div");
+        row.className = "habit-edit-row";
+        const title = this.settings.lang === 'ar' ? (h.titleAr || h.title) : (h.titleEn || h.title);
+        row.innerHTML = `
+          <input type="text" class="habit-edit-input" value="${esc(title)}">
+          <button class="btn-delete-habit" aria-label="${esc(this.t("delLabel"))}"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+        `;
+        row.querySelector("input").addEventListener("change", (e) => {
+          if (this.settings.lang === 'ar') h.titleAr = e.target.value;
+          else h.titleEn = e.target.value;
+          h.title = e.target.value;
+          this.saveData();
+          this.renderHabits();
+        });
+        row.querySelector("button").addEventListener("click", () => {
+          this.data.customHabits.splice(index, 1);
+          this.saveData();
+          this.renderHabitSettings();
+          this.renderHabits();
+        });
+        container.appendChild(row);
+      });
+    },
+
+    renderSettings() {
+      document.getElementById("inpPomodoro").value = this.settings.pomodoro;
+      document.getElementById("inpShortBreak").value = this.settings.shortBreak;
+      document.getElementById("inpLongBreak").value = this.settings.longBreak;
+      document.getElementById("inpDailyGoal").value = this.settings.dailyGoal || 4;
+      document.getElementById("chkAutoStart").checked = this.settings.autoStart;
+      document.getElementById("chkSound").checked = this.settings.soundEnabled;
+
+      this.renderHabitSettings();
+
+      const swatches = document.getElementById("colorSwatches");
+      swatches.innerHTML = "";
+      THEMES.forEach(t => {
+        const b = document.createElement("button");
+        b.className = `swatch-btn ${this.settings.theme === t.id ? "active" : ""}`;
+        b.style.backgroundColor = t.color;
+        b.addEventListener("click", () => {
+          this.settings.theme = t.id;
+          this.saveSettings();
+          this.applyTheme();
+          this.renderSettings();
+          this.renderHeatmap();
+        });
+        swatches.appendChild(b);
+      });
+
+      document.querySelectorAll("#appearanceSeg button").forEach(b => {
+        b.classList.toggle("active", b.dataset.mode === this.settings.mode);
+        b.onclick = () => {
+          this.settings.mode = b.dataset.mode;
+          this.saveSettings();
+          this.applyTheme();
+          this.renderSettings();
+        };
+      });
+
+      document.querySelectorAll("#languageSeg button").forEach(b => {
+        b.classList.toggle("active", b.dataset.lang === this.settings.lang);
+        b.onclick = () => {
+          this.settings.lang = b.dataset.lang;
+          this.saveSettings();
+          this.applyLanguage();
+          this.renderSettings();
+          this.renderHabits();
+          this.renderGoal();
+          this.renderHeatmap();
+          this.renderStats();
+          this.lastSig = null;
+          this.worshipTick();
+        };
+      });
+    },
+
+    renderAll() {
+      this.renderGoal();
+      this.renderHabits();
+      this.renderWorship();
+      this.renderHeatmap();
+      this.renderStats();
+      this.renderSettings();
+      this.setTimerMode(this.timer.mode);
+    },
+
+    bindEvents() {
+      document.querySelectorAll("nav.tabs button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          this.haptic(8);
+          document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", String(b === btn)));
+          document.querySelectorAll("nav.tabs button").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-selected", "false"); });
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
+          document.querySelectorAll("section.view").forEach(v => v.classList.remove("active"));
+          const view = document.getElementById(`view-${btn.dataset.view}`);
+          if (view) view.classList.add("active");
+          if (btn.dataset.view === "stats") this.renderStats();
+          if (btn.dataset.view === "worship" && this.getLoc().def && !this.locAsked) { this.locAsked = true; this.locate(); }
+        });
+      });
+
+      document.getElementById("btnToggleTimer").addEventListener("click", () => this.toggleTimer());
+      document.getElementById("btnResetTimer").addEventListener("click", () => this.resetTimer());
+      document.getElementById("btnSkipTimer").addEventListener("click", () => this.handleTimerComplete(true));
+      
+      document.querySelectorAll("#timerModes button").forEach(btn => {
+        btn.addEventListener("click", () => this.setTimerMode(btn.dataset.mode));
+      });
+
+      document.addEventListener("keydown", e => {
+        if (!currentUserId || e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)) return;
+        if (e.code === "Space") { e.preventDefault(); this.toggleTimer(); }
+        else if (e.code === "KeyR") this.resetTimer();
+        else if (e.code === "KeyS") this.handleTimerComplete(true);
+      });
+      document.addEventListener("visibilitychange", () => { if (!document.hidden && this.timer.isRunning) this.requestWake(); });
+
+      document.getElementById("btnPrevDate").addEventListener("click", () => {
+        this.activeDateOffset--;
+        this.renderDateDisplay();
+        this.renderHabits();
+        this.renderWorship();
+      });
+      document.getElementById("btnNextDate").addEventListener("click", () => {
+        if(this.activeDateOffset < 0) {
+          this.activeDateOffset++;
+          this.renderDateDisplay();
+          this.renderHabits();
+          this.renderWorship();
+        }
+      });
+      document.getElementById("dateDisplay").addEventListener("click", () => {
+        this.activeDateOffset = 0;
+        this.renderDateDisplay();
+        this.renderHabits();
+        this.renderWorship();
+      });
+
+      const bindNum = (id, key) => {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener("change", () => {
+          let v = parseFloat(el.value);
+          if(isNaN(v) || v < 0) v = (key === "dailyGoal" ? 1 : 1);
+          this.settings[key] = v;
+          el.value = v;
+          this.saveSettings();
+          if(key === "dailyGoal") { this.renderHeatmap(); this.renderGoal(); return; }
+          if(this.timer.mode === (key==="pomodoro"?"pomodoro":(key==="shortBreak"?"shortBreak":"longBreak")) && !this.timer.isRunning) {
+            this.setTimerMode(this.timer.mode);
+          }
+        });
+      };
+      bindNum("inpPomodoro", "pomodoro");
+      bindNum("inpShortBreak", "shortBreak");
+      bindNum("inpLongBreak", "longBreak");
+      bindNum("inpDailyGoal", "dailyGoal");
+
+      document.getElementById("chkAutoStart").addEventListener("change", (e) => { this.settings.autoStart = e.target.checked; this.saveSettings(); });
+      document.getElementById("chkSound").addEventListener("change", (e) => { this.settings.soundEnabled = e.target.checked; this.saveSettings(); });
+
+      document.getElementById("btnToggleHabitEdit").addEventListener("click", () => {
+        const wrapper = document.getElementById("habitEditWrapper");
+        wrapper.style.display = wrapper.style.display === "none" ? "block" : "none";
+      });
+
+      document.querySelectorAll("#statsFilterSeg button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          this.settings.statsFilter = btn.dataset.filter;
+          this.saveSettings();
+          this.renderStats();
+        });
+      });
+
+      document.getElementById("btnAddCustomHabit").addEventListener("click", () => {
+        const input = document.getElementById("inpNewHabit");
+        const val = input.value.trim();
+        if(val) {
+          this.data.customHabits.push({
+            id: "h_" + Date.now(),
+            titleAr: val, titleEn: val, title: val,
+            icon: `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`
+          });
+          input.value = "";
+          this.saveData();
+          this.renderHabitSettings();
+          this.renderHabits();
+        }
+      });
+      document.getElementById("inpNewHabit").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") document.getElementById("btnAddCustomHabit").click();
+      });
+
+      document.getElementById("btnExportData").addEventListener("click", () => {
+        const dataStr = JSON.stringify({ settings: this.settings, data: this.data });
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `stuon-backup-${DateUtils.getTodayStr()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.showToast("toastDataExported");
+      });
+
+      document.getElementById("btnImportData").addEventListener("click", () => document.getElementById("fileImport").click());
+      document.getElementById("fileImport").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const parsed = JSON.parse(ev.target.result);
+            if(parsed && typeof parsed.settings === "object" && typeof parsed.data === "object" && parsed.data !== null && confirm(this.settings.lang === "ar" ? "سيتم استبدال بياناتك الحالية. هل تريد المتابعة؟" : "This will replace your current data. Continue?")) {
+              this.settings = { ...defaultSettings, ...parsed.settings };
+              this.data = { ...defaultData, ...parsed.data };
+              this.saveSettings();
+              this.saveData();
+              this.renderAll();
+              this.showToast("toastDataImported");
+            }
+          } catch(err) { this.showToast("toastImportError"); }
+        };
+        reader.readAsText(file);
+        e.target.value = "";
+      });
+
+      document.getElementById("btnResetAll").addEventListener("click", () => {
+        const msg = this.settings.lang === 'ar' 
+          ? "هل أنت متأكد من مسح جميع بياناتك؟ ستبدأ من جديد تماماً ولن يمكنك التراجع." 
+          : "Are you sure you want to delete all your data? This cannot be undone.";
+        if(confirm(msg)) {
+          if (currentUserId) {
+            remove(ref(db, `users/${currentUserId}/data`)).then(() => {
+              this.showToast("toastDataCleared");
+              setTimeout(() => location.reload(), 1500);
+            });
+          }
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && currentUserId) {
+          this.applyLanguage();
+          this.renderHabits();
+          this.renderWorship();
+          this.renderHeatmap();
+          this.calculateGlobalStreak();
+          if (document.getElementById("view-stats").classList.contains("active")) {
+            this.renderStats();
+          }
+        }
+      });
+    }
+  };
+
+  app.init();
+  window.addEventListener("online", () => { if (currentUserId && !cloudReady) location.reload(); });
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  const netBar = document.getElementById("netBanner"), netUpd = () => { netBar.hidden = navigator.onLine; };
+  window.addEventListener("online", netUpd); window.addEventListener("offline", netUpd); netUpd();
+  let deferredInstall = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; document.getElementById("installGroup").hidden = false; });
+  window.addEventListener("appinstalled", () => { deferredInstall = null; document.getElementById("installGroup").hidden = true; });
+  document.getElementById("btnInstall").addEventListener("click", async () => { if (!deferredInstall) return; deferredInstall.prompt(); try { await deferredInstall.userChoice; } catch (e) {} deferredInstall = null; document.getElementById("installGroup").hidden = true; });
+
+  const authOverlay = document.getElementById('authOverlay');
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  const authTitle = document.getElementById('authTitle');
+  const showSignup = document.getElementById('showSignup');
+  const showLogin = document.getElementById('showLogin');
+  const accountGroup = document.getElementById('accountGroup');
+  const currentUserEmail = document.getElementById('currentUserEmail');
+  const btnSignOut = document.getElementById('btnSignOut');
+  const welcomeName = document.getElementById('welcomeName');
+  const authError = document.getElementById('authError');
+  const globalLoader = document.getElementById('globalLoader');
+
+  const AUTH_ERR = { "auth/invalid-email": "errInvalidEmail", "auth/user-disabled": "errDisabled", "auth/user-not-found": "errNoUser", "auth/wrong-password": "errWrongPass", "auth/email-already-in-use": "errInUse", "auth/weak-password": "errWeak", "auth/network-request-failed": "errNetwork", "auth/too-many-requests": "errMany", "auth/invalid-credential": "errCred" };
+  function getAuthErrorMessage(code) { return app.t(AUTH_ERR[code] || "errDefault"); }
+
+  let authMode = "login", welcomeUser = null;
+  const applyAuthText = () => {
+    authTitle.textContent = app.t(authMode === "signup" ? "authSignupTitle" : "authLoginTitle");
+    document.getElementById("authLang").textContent = app.settings.lang === "ar" ? "English" : "العربية";
+  };
+  const renderWelcome = () => {
+    if (welcomeUser === null) return;
+    welcomeName.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> ${esc(app.t("welcomeUser"))} ${esc(welcomeUser || app.t("friend"))}`;
+  };
+  app.onLanguage = () => { applyAuthText(); renderWelcome(); };
+  applyAuthText();
+  document.getElementById("authLang").addEventListener("click", () => { app.settings.lang = app.settings.lang === "ar" ? "en" : "ar"; app.applyLanguage(); });
+
+  function showError(msg) {
+    authError.style.display = 'block';
+    authError.innerText = msg;
+  }
+
+  function hideError() {
+    authError.style.display = 'none';
+  }
+
+  function toggleBtnLoading(btnId, isLoading) {
+    const btn = document.getElementById(btnId);
+    const text = btn.querySelector('.btn-text');
+    const spinner = btn.querySelector('.spinner');
+    if (isLoading) {
+      btn.disabled = true;
+      text.style.display = 'none';
+      spinner.style.display = 'inline-block';
+    } else {
+      btn.disabled = false;
+      text.style.display = 'inline';
+      spinner.style.display = 'none';
+    }
+  }
+
+  showSignup.addEventListener('click', () => {
+    hideError();
+    loginForm.style.display = 'none';
+    signupForm.style.display = 'flex';
+    authMode = 'signup'; applyAuthText();
+  });
+
+  showLogin.addEventListener('click', () => {
+    hideError();
+    signupForm.style.display = 'none';
+    loginForm.style.display = 'flex';
+    authMode = 'login'; applyAuthText();
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+    toggleBtnLoading('btnLoginSubmit', true);
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPassword').value;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (err) {
+      showError(getAuthErrorMessage(err.code));
+      toggleBtnLoading('btnLoginSubmit', false);
+    }
+  });
+
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+    toggleBtnLoading('btnSignupSubmit', true);
+    const name = document.getElementById('signupName').value;
+    const age = document.getElementById('signupAge').value;
+    const email = document.getElementById('signupEmail').value;
+    const pass = document.getElementById('signupPassword').value;
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+      await updateProfile(userCred.user, { displayName: name });
+      const userRef = ref(db, `users/${userCred.user.uid}/profile`);
+      await set(userRef, { name: name, age: age, email: email });
+    } catch (err) {
+      showError(getAuthErrorMessage(err.code));
+      toggleBtnLoading('btnSignupSubmit', false);
+    }
+  });
+
+  document.getElementById('forgotPass').addEventListener('click', async () => {
+    hideError();
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!email) { showError(app.t('authNeedEmail')); return; }
+    try { await sendPasswordResetEmail(auth, email); showError(app.t('authResetSent')); }
+    catch (err) { showError(getAuthErrorMessage(err.code)); }
+  });
+
+  btnSignOut.addEventListener('click', () => {
+    signOut(auth).then(() => location.reload());
+  });
+
+  onAuthStateChanged(auth, async (user) => {
+    globalLoader.style.display = 'flex';
+    
+    if (user) {
+      currentUserId = user.uid;
+      try {
+        const snapshot = await Promise.race([get(child(ref(db), `users/${user.uid}`)), new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 10000))]);
+        if (snapshot.exists()) {
+          const cloudData = snapshot.val();
+          if (cloudData.settings) {
+            app.settings = { ...defaultSettings, ...cloudData.settings };
+          }
+          if (cloudData.data) {
+            app.data = { ...structuredClone(defaultData), ...cloudData.data };
+            if(!app.data.customHabits || app.data.customHabits.length === 0) {
+              app.data.customHabits = JSON.parse(JSON.stringify(DEFAULT_HABITS));
+            }
+          }
+          app.applyTheme(); app.applyLanguage();
+          app.renderAll();
+          cloudReady = true;
+        } else {
+          cloudReady = true;
+          set(ref(db, `users/${user.uid}/settings`), app.settings);
+          set(ref(db, `users/${user.uid}/data`), app.data);
+        }
+      } catch (err) {
+        console.error("Firebase sync error:", err);
+        cloudReady = false;
+        app.showToast("toastOffline");
+      }
+
+      authOverlay.style.opacity = '0';
+      setTimeout(() => authOverlay.style.display = 'none', 300);
+      
+      accountGroup.style.display = 'block';
+      currentUserEmail.innerText = user.email;
+      
+      welcomeUser = user.displayName ? user.displayName.split(' ')[0] : '';
+      welcomeName.style.display = 'flex';
+      renderWelcome();
+      
+      toggleBtnLoading('btnLoginSubmit', false);
+      toggleBtnLoading('btnSignupSubmit', false);
+    } else {
+      currentUserId = null;
+      app.settings = { ...defaultSettings };
+      app.data = { ...defaultData };
+      app.applyTheme(); app.applyLanguage();
+      app.renderAll();
+
+      authOverlay.style.display = 'flex';
+      setTimeout(() => authOverlay.style.opacity = '1', 10);
+      
+      accountGroup.style.display = 'none';
+      welcomeName.style.display = 'none';
+      welcomeName.innerHTML = '';
+      welcomeUser = null;
+      
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('signupPassword').value = '';
+    }
+    
+    setTimeout(() => globalLoader.style.display = 'none', 500);
+  });
+
+</script>
+</body>
+</html>
